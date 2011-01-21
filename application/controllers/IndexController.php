@@ -5,10 +5,12 @@ class IndexController extends Zend_Controller_Action
 
     public function init()
     {
-//        print "<pre>";
-//        session_start();
-//        var_dump ($_SESSION);
     }
+
+    public function faqAction()
+    {
+    }
+
 
 //    public function authenticateAction()
 //    {
