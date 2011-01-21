@@ -48,6 +48,28 @@ class IndexController extends Zend_Controller_Action
 //    }
 
     public function indexAction() {
+        $scoreboard = array();
+            $score = new StdClass();
+            $score->rank = 1;
+            $score->username = "JayTaph";
+            $score->points = 5;
+        $scoreboard[] = $score;
+            $score = new StdClass();
+            $score->rank = 2;
+            $score->username = "Trafex";
+            $score->points = 3;
+        $scoreboard[] = $score;
+            $score = new StdClass();
+            $score->rank = 3;
+            $score->username = "eXistenZNL";
+            $score->points = 2;
+        $scoreboard[] = $score;
+
+        $this->view->scoreboard = $scoreboard;
+    }
+
+
+    public function statusAction() {
         $twitter = Zend_Registry::get('twitter');
         //$response = $twitter->status->friendsTimeline();
         $response = $twitter->directMessage->messages();
