@@ -3,6 +3,7 @@
 class Model_Answer_Entity extends Model_Entity {
     protected $_id;
     protected $_twitter_id;
+    protected $_status_id;
     protected $_answer;
     protected $_question_id;
     protected $_receive_dt;
@@ -56,6 +57,16 @@ class Model_Answer_Entity extends Model_Entity {
     public function getTwitterId()
     {
         return $this->_twitter_id;
+    }
+
+    public function setStatusId($status_id)
+    {
+        $this->_status_id = $status_id;
+    }
+
+    public function getStatusId()
+    {
+        return $this->_status_id;
     }
 
 }

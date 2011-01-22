@@ -47,8 +47,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
                         'path'      => 'forms'
                 )
         ));
-
-}
+        $resourceLoader->addResourceTypes(array(
+                'phpoton' => array(
+                        'namespace' => 'Phpoton',
+                        'path'      => '../library/Phpoton'
+                )
+        ));
+    }
 
 }
 

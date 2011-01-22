@@ -8,9 +8,10 @@ class Model_Answer_Mapper extends Model_Mapper {
         $data = array();
         $data['id'] = $obj->getId();
         $data['twitter_id'] = $obj->getTwitterId();
+        $data['status_id'] = $obj->getStatusId();
         $data['answer'] = $obj->getAnswer();
         $data['question_id'] = $obj->getQuestionId();
-        $data['receive_dt'] = $obj->getRecieveDt();
+        $data['receive_dt'] = $obj->getReceiveDt();
         return $data;
     }
 
@@ -18,6 +19,7 @@ class Model_Answer_Mapper extends Model_Mapper {
         $obj = new Model_Answer_Entity();
         $obj->setId($data['id']);
         $obj->setTwitterId($data['twitter_id']);
+        $obj->setStatusId($data['status_id']);
         $obj->setAnswer($data['answer']);
         $obj->setQuestionId($data['question_id']);
         $obj->setReceiveDt($data['receive_dt']);

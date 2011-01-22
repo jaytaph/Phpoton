@@ -28,9 +28,13 @@ abstract class Model_Mapper {
     function save(Model_Entity $obj) {
         $data = $this->_toArray($obj);
 
-        // Check if record exists on PK.
-        $select = $this->_table->select()->where($this->_primaryKey.' = ?' , $obj->getId());
-        $row = $this->_table->fetchRow($select);
+        if ($obj->getId() == 0) {
+            $row = null;
+        } else {
+            // Check if record exists on PK.
+            $select = $this->_table->select()->where($this->_primaryKey.' = ?' , $obj->getId());
+            $row = $this->_table->fetchRow($select);
+        }
 
         
         if ($row == null) {

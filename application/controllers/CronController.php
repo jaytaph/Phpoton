@@ -51,15 +51,13 @@ class CronController extends Zend_Controller_Action
 
     
     public function getrepliesAction() {
-        // @TODO: Should be a service: Phpoton_Config->loadConfig()
         // Get status object
-        $mapper = new Model_Status_Mapper();
-        $config = $mapper->findByPk(1);
+        $mainStatus = Phpoton_Status::loadStatus();
 
         /**
          * @var $twitter Zend_Service_Twitter
          */
-        $options = array('since_id' => $config->getSinceId(), 'count' => 100);
+        $options = array('since_id' => $mainStatus->getSinceId(), 'count' => 100);
         $twitter = Zend_Registry::get('twitter');
         $response = $twitter->statusReplies($options);
 
@@ -77,7 +75,16 @@ class CronController extends Zend_Controller_Action
         print "<tr><th>Thumb</th><th>Time</th><th>Tweet</th></tr>";
         foreach ($response->status as $status) {
             // Always save the highest status ID so we don't have to fetch these the next time
-            if ($status->id > $config->getSinceId()) $config->setSinceId($status->id);
+            if ($status->id > $mainStatus->getSinceId()) $mainStatus->setSinceId($status->id);
+
+            $answer = new Model_Answer_Entity();
+            $answer->setAnswer($status->text);
+            $answer->setTwitterId($status->user->id);
+            $answer->setQuestionId($mainStatus->getQuestionId());
+            $answer->setReceiveDt($status->created_at);
+            $answerMapper = new Model_Answer_Mapper();
+            $answerMapper->save($answer);
+
             if ($odd) {
                 print "<tr style='background-color: #ddd'>";
             } else {
@@ -92,9 +99,8 @@ class CronController extends Zend_Controller_Action
         print "</table>";
 
 
-        // Save the highest since_id back to the config
-        // @TODO: Should be a service: Phpoton_Config->saveConfig()
-        $mapper->save($config);
+        // Save the highest since_id back to the status
+        Phpoton_Status::saveStatus($mainStatus);
     }
     
 }
