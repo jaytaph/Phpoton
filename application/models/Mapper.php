@@ -25,6 +25,23 @@ abstract class Model_Mapper {
         return $this->_fromArray($row->toArray());
     }
 
+    /**
+     * Fetch all records
+     *
+     * @TODO: Create an iterator from this data
+     *
+     * @return array Model_Entity $object
+     */
+    function fetchAll() {
+        $select = $this->_table->select();
+
+        $ret = array();
+        foreach ($this->_table->fetchAll($select) as $record) {
+            $ret[] = $this->_fromArray($record->toArray());
+        }
+        return $ret;
+    }
+
     function save(Model_Entity $obj) {
         $data = $this->_toArray($obj);
 
