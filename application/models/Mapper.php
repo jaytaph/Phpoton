@@ -17,11 +17,12 @@ abstract class Model_Mapper {
      */
     function findByPk($value) {
         $select = $this->_table->select()->where($this->_primaryKey.' = ?' , $value);
-        $row = $this->fetchRow($select);
+        $row = $this->_table->fetchRow($select);
         if ($row == null) {
             return null;
         }
-        return $this->_fromArray($row);
+
+        return $this->_fromArray($row->toArray());
     }
 
     function save(Model_Entity $obj) {

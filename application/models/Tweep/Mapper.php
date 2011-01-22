@@ -12,7 +12,7 @@ class Model_Tweep_Mapper extends Model_Mapper {
     }
 
     protected function _fromArray(array $data) {
-        $obj = new Model_Scoreboard_Entity();
+        $obj = new Model_Tweep_Entity();
         $obj->setId($data['id']);
         $obj->setScreenName($data['screen_name']);
         return $obj;

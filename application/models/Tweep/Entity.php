@@ -1,7 +1,7 @@
 <?php
 
 class Model_Tweep_Entity extends Model_Entity {
-    protected $_twitter_id;
+    protected $_id;
     protected $_screen_name;
 
 
@@ -15,13 +15,14 @@ class Model_Tweep_Entity extends Model_Entity {
         return $this->_screen_name;
     }
 
-    public function setTwitterId($twitter_id)
+    public function setId($id)
     {
-        $this->_twitter_id = $twitter_id;
+        $this->_id = $id;
     }
 
-    public function getTwitterId()
+    public function getId()
     {
-        return $this->_twitter_id;
+        return $this->_id;
     }
+
 }

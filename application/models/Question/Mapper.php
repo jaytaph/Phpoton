@@ -29,5 +29,5 @@ class Model_Question_Mapper extends Model_Mapper {
         $obj->setModerated($data['moderated']);
         return $obj;
     }
-    
+
 }

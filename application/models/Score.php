@@ -7,10 +7,13 @@ class Model_Score {
     protected $_points;
 
 
+    /**
+     * @return Model_Tweep_Entity
+     */
     public function getTwitterInfo() {
         $mapper = new Model_Tweep_Mapper();
-        $info = $mapper->findByPk($this->getTwitterId());
-        return $info;
+        $entity = $mapper->findByPk($this->getTwitterId());
+        return $entity;
     }
 
     public function setPoints($points)
