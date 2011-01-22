@@ -28,9 +28,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         Zend_Db_Table_Abstract::setDefaultAdapter($db);
     }
 
-
     protected function _initLoaderResource()
     {
+        // @TODO: add to application.ini
         $resourceLoader = new Zend_Loader_Autoloader_Resource(array(
                 'basePath'  => APPLICATION_PATH,
                 'namespace' => ''
@@ -55,5 +55,17 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         ));
     }
 
+    protected function _initRouters()
+    {
+        // @TODO: add to application.ini
+        $router = new Zend_Controller_Router_Rewrite();
+
+        $router->addRoute('question',
+            new Zend_Controller_Router_Route('question/:id', array('controller' => 'index', 'action' => 'question'))
+        );
+
+        $controller = Zend_Controller_Front::getInstance();
+        $controller->setRouter($router);
+    }
 }
 
