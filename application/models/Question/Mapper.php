@@ -13,7 +13,7 @@ class Model_Question_Mapper extends Model_Mapper {
         $data['twitter_id'] = $obj->getTwitterId();
         $data['create_dt'] = $obj->getCreateDt();
         $data['tweet_dt'] = $obj->getTweetDt();
-        $data['moderated'] = $obj->getModerated();
+        $data['status'] = $obj->getStatus();
         return $data;
     }
 
@@ -26,7 +26,7 @@ class Model_Question_Mapper extends Model_Mapper {
         $obj->setTwitterId($data['twitter_id']);
         $obj->setCreateDt($data['create_dt']);
         $obj->setTweetDt($data['tweet_dt']);
-        $obj->setModerated($data['moderated']);
+        $obj->setStatus($data['status']);
         return $obj;
     }
 
@@ -34,7 +34,7 @@ class Model_Question_Mapper extends Model_Mapper {
     public function getPendingQuestion() {
         $select = $this->_table->select()
                 ->where('tweet_dt IS NULL')
-                ->where('moderated = 1')
+                ->where('status = ?', 'pending')
                 ->limit(1);
         $row = $this->_table->fetchRow($select);
         if ($row == null) {

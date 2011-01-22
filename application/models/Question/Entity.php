@@ -8,11 +8,8 @@ class Model_Question_Entity extends Model_Entity {
     protected $_twitter_id;
     protected $_create_dt;
     protected $_tweet_dt;
-    protected $_moderated;
+    protected $_status;
 
-    public function getStatus() {
-        return "answered";
-    }
 
     public function getReplyCount() {
         // @TODO
@@ -78,16 +75,6 @@ class Model_Question_Entity extends Model_Entity {
         return $this->_tweet_dt;
     }
 
-    public function setModerated($moderated)
-    {
-        $this->_moderated = $moderated;
-    }
-
-    public function getModerated()
-    {
-        return $this->_moderated;
-    }
-
     public function setTwitterId($twitter_id)
     {
         $this->_twitter_id = $twitter_id;
@@ -106,6 +93,16 @@ class Model_Question_Entity extends Model_Entity {
     public function getFullname()
     {
         return $this->_fullname;
+    }
+
+    public function setStatus($status)
+    {
+        $this->_status = $status;
+    }
+
+    public function getStatus()
+    {
+        return $this->_status;
     }
 
 

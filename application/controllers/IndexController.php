@@ -37,16 +37,30 @@ class IndexController extends Zend_Controller_Action
 
         $mapper = new Model_Question_Mapper();
         $question = $mapper->findByPk($id);
+        $this->view->question = $question;
 
         if ($question == null) {
-            $this->render("question/notexisting");
+            $this->render("question/notfound");
             return;
         }
 
-        $this->view->question = $question;
-        $this->render("question/index");
-
-//        print "Question ID given is ".$id;
+        switch ($question->getStatus()) {
+            case "moderation" :
+                $this->render("question/moderation");
+                break;
+            case "pending" :
+                $this->render("question/pending");
+                break;
+            case "active" :
+                $this->render("question/active");
+                break;
+            case "done" :
+                $this->render("question/done");
+                break;
+            default :
+                $this->render("question/notfound");
+                break;
+        }
     }
 
     public function statsAction() {
