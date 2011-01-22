@@ -55,7 +55,7 @@ class CronController extends Zend_Controller_Action
     }
 
     
-    public function getrepliesAction() {
+    public function retreiveRepliesAction() {
         // Get status object
         $mainStatus = Phpoton_Status::loadStatus();
 
@@ -75,7 +75,7 @@ class CronController extends Zend_Controller_Action
 
 
         // Iterate over all found statuses
-        $odd = true;
+        $odd = false;
         print "<table>";
         print "<tr><th>Thumb</th><th>Time</th><th>Tweet</th></tr>";
         foreach ($response->status as $status) {
@@ -91,12 +91,7 @@ class CronController extends Zend_Controller_Action
             $answerMapper = new Model_Answer_Mapper();
             $answerMapper->save($answer);
 
-            if ($odd) {
-                print "<tr style='background-color: #ddd'>";
-            } else {
-                print "<tr style='background-color: #eee'>";
-            }
-            $odd = ! $odd;
+            print "<tr style='background-color: ".(($odd = ! $odd)?"#ddd":"#eee")."'>";
             print "<td>".$status->user->screen_name."</td>";
             print "<td>".$status->created_at."</td>";
             print "<td>".$status->text."</td>";
