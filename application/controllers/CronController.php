@@ -55,7 +55,7 @@ class CronController extends Zend_Controller_Action
     }
 
     
-    public function retreiveRepliesAction() {
+    public function retreiverepliesAction() {
         // Get status object
         $mainStatus = Phpoton_Status::loadStatus();
 
@@ -103,6 +103,15 @@ class CronController extends Zend_Controller_Action
         // Save the highest since_id back to the status
         Phpoton_Status::saveStatus($mainStatus);
     }
-    
+
+
+    public function tweetwinnerAction() {
+        $tweetText = "Points for Q1 goes to @jaytaph #phpoton http://bit.ly/fHbi7B";
+
+        // Send message to twitter
+        $twitter = Zend_Registry::get('twitter');
+        $twitter->status->update($tweetText);
+    }
+
 }
 
