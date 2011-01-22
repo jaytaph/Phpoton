@@ -10,6 +10,19 @@ class Model_Question_Entity extends Model_Entity {
     protected $_tweet_dt;
     protected $_moderated;
 
+    public function getReplyCount() {
+        // @TODO
+        return rand(1, 100);
+    }
+
+    public function getCorrectReplyCount() {
+        return rand(1, 100);
+    }
+
+    public function getWinner() {
+        return "@JayTaph";
+    }
+
 
     public function setAnswer($answer)
     {
