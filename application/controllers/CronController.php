@@ -46,6 +46,11 @@ class CronController extends Zend_Controller_Action
         $question->setTweetDt(new Zend_Db_Expr('NOW()'));
         $mapper->save($question);
 
+        // Get status object
+        $mainStatus = Phpoton_Status::loadStatus();
+        $mainStatus->setQuestionId($question->getId());
+        Phpoton_Status::saveStatus($mainStatus);
+
         print "Question ".$question->getId()." tweeted: ".$tweetText.".\n";
     }
 
@@ -80,6 +85,7 @@ class CronController extends Zend_Controller_Action
             $answer = new Model_Answer_Entity();
             $answer->setAnswer($status->text);
             $answer->setTwitterId($status->user->id);
+            $answer->setStatusId($status->id);
             $answer->setQuestionId($mainStatus->getQuestionId());
             $answer->setReceiveDt($status->created_at);
             $answerMapper = new Model_Answer_Mapper();
