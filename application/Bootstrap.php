@@ -22,6 +22,33 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         $twitter = new Zend_Service_Twitter($data);
 
         Zend_Registry::set('twitter', $twitter);
+
+        // Initialize DB connection
+        $db = Zend_Db::factory($config->resources->db);
+        Zend_Db_Table_Abstract::setDefaultAdapter($db);
     }
+
+
+    protected function _initLoaderResource()
+    {
+        $resourceLoader = new Zend_Loader_Autoloader_Resource(array(
+                'basePath'  => APPLICATION_PATH,
+                'namespace' => ''
+        ));
+        $resourceLoader->addResourceTypes(array(
+                'model' => array(
+                        'namespace' => 'Model',
+                        'path'      => 'models'
+                )
+        ));
+        $resourceLoader->addResourceTypes(array(
+                'forms' => array(
+                        'namespace' => 'Form',
+                        'path'      => 'forms'
+                )
+        ));
+
+}
+
 }
 
