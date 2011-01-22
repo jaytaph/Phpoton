@@ -10,6 +10,10 @@ class Model_Question_Entity extends Model_Entity {
     protected $_tweet_dt;
     protected $_moderated;
 
+    public function getStatus() {
+        return "answered";
+    }
+
     public function getReplyCount() {
         // @TODO
         return rand(1, 100);
@@ -20,7 +24,7 @@ class Model_Question_Entity extends Model_Entity {
     }
 
     public function getWinner() {
-        return "@JayTaph";
+        return "[twitter:JayTaph]  [twitter:JayTaph/123456]";
     }
 
 
