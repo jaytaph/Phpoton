@@ -26,10 +26,23 @@ abstract class Model_Mapper {
     }
 
     function save(Model_Entity $obj) {
-        // @TODO: Check if record exists on PK.
-        // If exists, update, otherwise insert
         $data = $this->_toArray($obj);
-        $this->_table->insert($data);
+
+        // Check if record exists on PK.
+        $select = $this->_table->select()->where($this->_primaryKey.' = ?' , $obj->getId());
+        $row = $this->_table->fetchRow($select);
+
+        
+        if ($row == null) {
+            // INSERT, record does not exists
+            $this->_table->insert($data);
+        } else {
+            // UPDATE, record does exists
+            $where = $this->_table->getAdapter()->quoteInto($this->_primaryKey.' = ?', $obj->getId());
+            $this->_table->update($data, $where);
+        }
+
+
     }
 
     abstract protected function _toArray(Model_Entity $obj);

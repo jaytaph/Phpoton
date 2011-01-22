@@ -30,4 +30,18 @@ class Model_Question_Mapper extends Model_Mapper {
         return $obj;
     }
 
+
+    public function getPendingQuestion() {
+        $select = $this->_table->select()
+                ->where('tweet_dt IS NULL')
+                ->where('moderated = 1')
+                ->limit(1);
+        $row = $this->_table->fetchRow($select);
+        if ($row == null) {
+            return null;
+        }
+
+        return $this->_fromArray($row->toArray());
+    }
+
 }

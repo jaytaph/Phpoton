@@ -23,5 +23,5 @@ class Model_Answer_Mapper extends Model_Mapper {
         $obj->setReceiveDt($data['receive_dt']);
         return $obj;
     }
-    
+
 }
