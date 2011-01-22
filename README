@@ -1,10 +1,9 @@
 PHPoton
-
-A (simple) tweetbot
-
+=======
+A (simple) tweetbot.
 
 
 TODO
-====
+-----------
 
 [ ] twitter's status_id is treated as a sequential number when ordering replies. We should not rely on this fact.
