@@ -45,10 +45,34 @@ class IndexController extends Zend_Controller_Action
     }
 
     
-    public function tweetAction()
+    public function repliesAction()
     {
+        /**
+         * @var $twitter Zend_Service_Twitter
+         */
         $twitter = Zend_Registry::get('twitter');
-        $twitter->status->update("Bliep! Hello world, again!");
+        $response = $twitter->statusReplies();
+//        print "<pre>";
+//        print_r ($response->status);
+//        exit;
+
+
+        $odd = true;
+        print "<table>";
+        print "<tr><th>Thumb</th><th>Time</th><th>Tweet</th></tr>";
+        foreach ($response->status as $status) {
+            if ($odd) {
+                print "<tr style='background-color: #ddd'>";
+            } else {
+                print "<tr style='background-color: #eee'>";
+            }
+            $odd = ! $odd;
+            print "<td>".$status->user->screen_name."</td>";
+            print "<td>".$status->created_at."</td>";
+            print "<td>".$status->text."</td>";
+            print "</tr>";
+        }
+        print "</table>";
         exit;
     }
 

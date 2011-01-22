@@ -1,6 +1,6 @@
 <?php
 
-class Model_Tweep_Entity extends Model_Entity {
+class Model_Status_Entity extends Model_Entity {
     protected $_id;
     protected $_since_id;
 
