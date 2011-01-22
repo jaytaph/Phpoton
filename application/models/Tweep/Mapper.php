@@ -17,5 +17,5 @@ class Model_Tweep_Mapper extends Model_Mapper {
         $obj->setScreenName($data['screen_name']);
         return $obj;
     }
-
+    
 }

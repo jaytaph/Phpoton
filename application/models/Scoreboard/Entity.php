@@ -6,6 +6,7 @@ class Model_Scoreboard_Entity extends Model_Entity {
     protected $_score_points;
     protected $_score_time;
 
+
     public function setId($id)
     {
         $this->_id = $id;

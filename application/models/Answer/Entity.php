@@ -7,6 +7,7 @@ class Model_Answer_Entity extends Model_Entity {
     protected $_question_id;
     protected $_receive_dt;
 
+
     public function setAnswer($answer)
     {
         $this->_answer = $answer;

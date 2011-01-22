@@ -6,11 +6,11 @@ class Form_Submit extends Zend_Form {
 
         $this->setName('submit_a_question');
 
-        $twitter = new Zend_Form_Element_Text('twitter');
-        $twitter->setLabel('Your twitter account')
-                ->setAttrib('maxlength', 35)
-                ->addValidator('NotEmpty')
-                ->addFilter('StripTags');
+//        $twitter = new Zend_Form_Element_Text('twitter');
+//        $twitter->setLabel('Your twitter name')
+//                ->setAttrib('maxlength', 35)
+//                ->addValidator('NotEmpty')
+//                ->addFilter('StripTags');
 
         $fullname = new Zend_Form_Element_Text('fullname');
         $fullname->setLabel('Your full name')
@@ -46,7 +46,7 @@ class Form_Submit extends Zend_Form {
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Submit question to phpoton');
 
-        $this->addElements(array($twitter, $fullname, $question, $answer, $captcha, $submit));
+        $this->addElements(array($fullname, $question, $answer, $captcha, $submit));
     }
 }
  

@@ -4,6 +4,7 @@ class Model_Question_Entity extends Model_Entity {
     protected $_id;
     protected $_question;
     protected $_answer;
+    protected $_fullname;
     protected $_twitter_id;
     protected $_create_dt;
     protected $_tweet_dt;
@@ -78,6 +79,16 @@ class Model_Question_Entity extends Model_Entity {
     public function getTwitterId()
     {
         return $this->_twitter_id;
+    }
+
+    public function setFullname($fullname)
+    {
+        $this->_fullname = $fullname;
+    }
+
+    public function getFullname()
+    {
+        return $this->_fullname;
     }
 
 

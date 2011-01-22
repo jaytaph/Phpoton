@@ -4,6 +4,7 @@ class Model_Tweep_Entity extends Model_Entity {
     protected $_twitter_id;
     protected $_screen_name;
 
+
     public function setScreenName($screen_name)
     {
         $this->_screen_name = $screen_name;
