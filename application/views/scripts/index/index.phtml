@@ -1,19 +1,17 @@
 <h1>Welcome to phpoton</h1>
 
-<p>PHOoton is an tweetbot. PHPoton tweets a question and collects the answers that are tweeted back. The user who tweets
+<p>PHPoton is an tweetbot. PHPoton tweets a question and collects the answers that are tweeted back. The user who tweets
 the correct answer the quickest scores points.</p>
 
 
-<h2>Current highscore</h2>
-<p>Who is currently inside the top-20?</p>
-
+<h2>Who is currently inside the top-20?</h2>
 
 <table>
-<?php foreach ($this->scoreboard as $score) : ?>
+<?php foreach ($this->topscore as $score) : ?>
   <tr>
-    <td>Rank #<?php echo $this->escape($score->rank);?></td>
-    <td><?php echo $this->escape($score->username); ?></td>
-    <td><?php echo $this->escape($score->points); ?> Points</td>
+    <td>Rank #<?php echo $this->escape($score->getRank());?></td>
+    <td><?php echo $this->escape($score->getTwitterInfo()->getScreenName()); ?></td>
+    <td><?php echo $this->escape($score->getPoints()); ?> Points</td>
   </tr>
 <?php endforeach; ?>
 </table>
