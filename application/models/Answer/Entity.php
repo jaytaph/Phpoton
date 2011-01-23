@@ -8,6 +8,27 @@ class Model_Answer_Entity extends Model_Entity {
     protected $_question_id;
     protected $_receive_dt;
 
+    protected $_tweep = null;
+
+
+    public function getCleanAnswer() {
+        $answer = $this->getAnswer();
+        $answer = preg_replace("/@\w+/", "", $answer);
+        $answer = str_replace("?", "", $answer);
+        $answer = strtolower($answer);
+        $answer = trim($answer);
+        return $answer;
+    }
+
+    /**
+     * @return Model_Tweep_Entity
+     */
+    public function getTweep() {
+        if ($this->_tweep == null) {
+            $this->_tweep = Phpoton_Tweep::getTweep($this->getTwitterId());
+        }
+        return $this->_tweep;
+    }
 
     public function setAnswer($answer)
     {

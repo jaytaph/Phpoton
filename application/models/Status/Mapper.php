@@ -5,6 +5,9 @@ class Model_Status_Mapper extends Model_Mapper {
     protected $_primaryKey = 'id';
 
     protected function _toArray(Model_Entity $obj) {
+        /**
+         * @var $obj Model_Status_Entity
+         */
         $data = array();
         $data['id'] = $obj->getId();
         $data['since_id'] = $obj->getSinceId();

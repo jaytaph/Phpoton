@@ -10,7 +10,7 @@ the correct answer the quickest scores points.</p>
 <?php foreach ($this->topscore as $score) : ?>
   <tr>
     <td>Rank #<?php echo $this->escape($score->getRank());?></td>
-    <td><?php echo $this->escape($score->getTwitterInfo()->getScreenName()); ?></td>
+    <td>[twitter:<?php echo $this->escape($score->getTwitterInfo()->getScreenName()); ?>]</td>
     <td><?php echo $this->escape($score->getPoints()); ?> Points</td>
   </tr>
 <?php endforeach; ?>

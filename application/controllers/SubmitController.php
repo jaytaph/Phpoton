@@ -38,7 +38,7 @@ class SubmitController extends Zend_Controller_Action
         // @TODO: If twitter name is set, we must fetch the twitter ID
         $question->setTwitterId(0);
         $question->setCreateDt(new Zend_Db_Expr("NOW()"));
-        $question->setModerated(0);
+        $question->setStatus("moderation");
 
         // Get mapper and save question
         $mapper = new Model_Question_Mapper();

@@ -55,7 +55,7 @@ class CronController extends Zend_Controller_Action
     }
 
     
-    public function retreiverepliesAction() {
+    public function retrieverepliesAction() {
         // Get status object
         $mainStatus = Phpoton_Status::loadStatus();
 
@@ -107,10 +107,27 @@ class CronController extends Zend_Controller_Action
 
     public function tweetwinnerAction() {
         $questionId = (int) $this->getRequest()->getParam('id');
+        if ($questionId == null) {
+            print "No question Id";
+            return;
+        }
+
+
         
         // Fetch active question
         $mapper = new Model_Question_Mapper();
         $question = $mapper->findByPk($questionId);
+
+        if ($question == null) {
+            print "Question not found...";
+            return;
+        }
+
+        if ($question->getStatus() != "done") {
+            // Do nothing when question is not done yet...
+            print "Nothing to do...";
+            return;
+        }
 
         // Shorten URL
         $url = Phpoton_Shortener::shorten("http://phpoton.com/question/".$question->getId());
@@ -120,7 +137,46 @@ class CronController extends Zend_Controller_Action
 
         // Send message to twitter
         $twitter = Zend_Registry::get('twitter');
-        $twitter->status->update($tweetText);
+        $result = $twitter->status->update($tweetText);
+
+        print "<pre>";
+        var_dump($result);
+    }
+
+    public function parseanswersAction() {
+        $question_mapper = new Model_Question_Mapper();
+        $question = $question_mapper->getActiveQuestion();
+
+        if ($question == null) {
+            print "No active questions!";
+            return;
+        }
+
+        print "<pre>";
+        print "Question: <b>".$question->getQuestion()."</b>: ".$question->getAnswer()."<br><br>";
+
+        $mapper = new Model_Answer_Mapper();
+        $answers = $mapper->fetchSequentialAnswersForQuestion($question);
+        foreach ($answers as $answer) {
+            /**
+             * @var $answer Model_Answer_Entity
+             */
+            print "Answer [twitter:@".$answer->getTweep()->getScreenName()."/".$answer->getStatusId()."] by ".$answer->getTweep()->getScreenName()." : ".$answer->getAnswer()." : ";
+
+            if ($question->isCorrectAnswer($answer)) {
+                print "Correct answer!";
+
+                // Set winner
+                $question->setStatus('done');
+                $question->setWinningAnswerId($answer->getId());
+                $question_mapper->save($question);
+
+                $scoreboard = new Model_Scoreboard_Mapper();
+                $scoreboard->increaseScore($answer->getTweep());
+                break;
+            }
+            print "<br>";
+        }
     }
 
 }

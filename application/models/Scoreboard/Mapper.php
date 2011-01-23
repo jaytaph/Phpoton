@@ -5,6 +5,9 @@ class Model_Scoreboard_Mapper extends Model_Mapper {
     protected $_primaryKey = 'id';
 
     protected function _toArray(Model_Entity $obj) {
+        /**
+         * @var $obj Model_Scoreboard_Entity
+         */
         $data = array();
         $data['id'] = $obj->getId();
         $data['twitter_id'] = $obj->getTwitterId();
@@ -58,7 +61,7 @@ class Model_Scoreboard_Mapper extends Model_Mapper {
      *
      * @return void
      */
-    function increaseScore(Model_Twitter_Entity $twitter, $time = 0) {
+    function increaseScore(Model_Tweep_Entity $twitter, $time = 0) {
         // @TODO: Must lock this record
 
         $select = $this->_table->select()->where('twitter_id LIKE ?', $twitter->getId());
@@ -66,7 +69,7 @@ class Model_Scoreboard_Mapper extends Model_Mapper {
 
         if ($row == null) {
             // Does not exists, insert new user
-            $data = array('twitter_id' => $twitter->getId());
+            $data = array('twitter_id' => $twitter->getId(), 'score_points' => 1);
             $this->_table->insert($data);
         } else {
             $data = array(

@@ -5,6 +5,9 @@ class Model_Question_Mapper extends Model_Mapper {
     protected $_primaryKey = 'id';
 
     protected function _toArray(Model_Entity $obj) {
+        /**
+         * @var $obj Model_Question_Entity
+         */
         $data = array();
         $data['id'] = $obj->getId();
         $data['question'] = $obj->getQuestion();
@@ -14,6 +17,7 @@ class Model_Question_Mapper extends Model_Mapper {
         $data['create_dt'] = $obj->getCreateDt();
         $data['tweet_dt'] = $obj->getTweetDt();
         $data['status'] = $obj->getStatus();
+        $data['winning_answer_id'] = $obj->getWinningAnswerId();
         return $data;
     }
 
@@ -27,9 +31,21 @@ class Model_Question_Mapper extends Model_Mapper {
         $obj->setCreateDt($data['create_dt']);
         $obj->setTweetDt($data['tweet_dt']);
         $obj->setStatus($data['status']);
+        $obj->setWinningAnswerId($data['winning_answer_id']);
         return $obj;
     }
 
+    public function getActiveQuestion() {
+        $select = $this->_table->select()
+                ->where('status = ?', 'active')
+                ->limit(1);
+        $row = $this->_table->fetchRow($select);
+        if ($row == null) {
+            return null;
+        }
+
+        return $this->_fromArray($row->toArray());
+    }
 
     public function getPendingQuestion() {
         $select = $this->_table->select()

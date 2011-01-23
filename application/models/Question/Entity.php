@@ -9,8 +9,9 @@ class Model_Question_Entity extends Model_Entity {
     protected $_create_dt;
     protected $_tweet_dt;
     protected $_status;
+    protected $_winning_answer_id;
 
-    protected $_tweep;      // Lazy loading tweep info
+    protected $_winning_tweep = null;      // Lazy loading tweep info
 
     public function getReplyCount() {
         // @TODO
@@ -18,6 +19,7 @@ class Model_Question_Entity extends Model_Entity {
     }
 
     public function getCorrectReplyCount() {
+        // @TODO: Change into correct reply count
         return rand(1, 100);
     }
 
@@ -25,11 +27,26 @@ class Model_Question_Entity extends Model_Entity {
      * @return Model_Tweep_Entity
      */
     public function getWinnerTweep() {
-        if ($this->_tweep == null) {
-            $mapper = new Model_Tweep_Mapper();
-            $this->_tweep = $mapper->findByPk($this->getTwitterId());
+        /**
+         * @var $answer Model_Answer_Entity
+         */
+        if ($this->_winning_tweep == null) {
+            $answer_id = $this->getWinningAnswerId();
+            if ($answer_id == null) {
+                return null;
+            }
+
+            $mapper = new Model_Answer_Mapper();
+            $answer = $mapper->findByPk($answer_id);
+            if ($answer == null) {
+                return null;
+            }
+
+            $twitter_id = $answer->getTwitterId();
+            $this->_winning_tweep = Phpoton_Tweep::getTweep($twitter_id);
         }
-        return $this->_tweep;
+        
+        return $this->_winning_tweep;
     }
 
 
@@ -113,5 +130,24 @@ class Model_Question_Entity extends Model_Entity {
         return $this->_status;
     }
 
+
+
+    public function isCorrectAnswer(Model_Answer_Entity $answer) {
+        $text = $this->getAnswer();
+        $text = strtolower($text);
+        $text = trim($text);
+
+        return ($answer->getCleanAnswer() == $text);
+    }
+
+    public function setWinningAnswerId($winning_answer_id)
+    {
+        $this->_winning_answer_id = $winning_answer_id;
+    }
+
+    public function getWinningAnswerId()
+    {
+        return $this->_winning_answer_id;
+    }
 
 }
