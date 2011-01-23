@@ -106,7 +106,17 @@ class CronController extends Zend_Controller_Action
 
 
     public function tweetwinnerAction() {
-        $tweetText = "Points for Q1 goes to @jaytaph #phpoton http://bit.ly/fHbi7B";
+        $questionId = (int) $this->getRequest()->getParam('id');
+        
+        // Fetch active question
+        $mapper = new Model_Question_Mapper();
+        $question = $mapper->findByPk($questionId);
+
+        // Shorten URL
+        $url = Phpoton_Shortener::shorten("http://phpoton.com/question/".$question->getId());
+
+        // Generate tweet text
+        $tweetText = "Points for Q".$question->getId()." go to @".$question->getWinnerTweep()->getScreenName()." #phpoton ".$url;
 
         // Send message to twitter
         $twitter = Zend_Registry::get('twitter');

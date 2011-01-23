@@ -10,6 +10,7 @@ class Model_Question_Entity extends Model_Entity {
     protected $_tweet_dt;
     protected $_status;
 
+    protected $_tweep;      // Lazy loading tweep info
 
     public function getReplyCount() {
         // @TODO
@@ -20,8 +21,15 @@ class Model_Question_Entity extends Model_Entity {
         return rand(1, 100);
     }
 
-    public function getWinner() {
-        return "[twitter:JayTaph]  [twitter:JayTaph/123456]";
+    /**
+     * @return Model_Tweep_Entity
+     */
+    public function getWinnerTweep() {
+        if ($this->_tweep == null) {
+            $mapper = new Model_Tweep_Mapper();
+            $this->_tweep = $mapper->findByPk($this->getTwitterId());
+        }
+        return $this->_tweep;
     }
 
 
