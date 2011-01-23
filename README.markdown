@@ -17,5 +17,5 @@ TODO
 
 TODO v2
 ------------
-[ ] Create "groups" with scores
-[ ] Adding users to groups by group leader
+    [ ] Create "groups" with scores
+    [ ] Adding users to groups by group leader
