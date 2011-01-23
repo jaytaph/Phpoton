@@ -29,7 +29,13 @@ class CronController extends Zend_Controller_Action
     public function tweetquestionAction() {
         // Find a pending question
         $mapper = new Model_Question_Mapper();
-        $question = $mapper->getPendingQuestion();
+        $question = $mapper->getActiveQuestion();
+        if ($question != null) {
+            print "Active question found. Not tweeting a new question...";
+            return;
+        }
+
+        $question = $mapper->getNextPendingQuestion();
         if ($question == null) {
             print "No more pending questions...";
             return;
@@ -58,7 +64,7 @@ class CronController extends Zend_Controller_Action
     public function retrieverepliesAction() {
         // Get status object
         $mainStatus = Phpoton_Status::loadStatus();
-
+        
         /**
          * @var $twitter Zend_Service_Twitter
          */
@@ -82,14 +88,17 @@ class CronController extends Zend_Controller_Action
             // Always save the highest status ID so we don't have to fetch these the next time
             if ($status->id > $mainStatus->getSinceId()) $mainStatus->setSinceId($status->id);
 
-            $answer = new Model_Answer_Entity();
-            $answer->setAnswer($status->text);
-            $answer->setTwitterId($status->user->id);
-            $answer->setStatusId($status->id);
-            $answer->setQuestionId($mainStatus->getQuestionId());
-            $answer->setReceiveDt($status->created_at);
-            $answerMapper = new Model_Answer_Mapper();
-            $answerMapper->save($answer);
+            // Don't save answers when there is no current question
+            if ($mainStatus->getQuestionId() != 0) {
+                $answer = new Model_Answer_Entity();
+                $answer->setAnswer($status->text);
+                $answer->setTwitterId($status->user->id);
+                $answer->setStatusId($status->id);
+                $answer->setQuestionId($mainStatus->getQuestionId());
+                $answer->setReceiveDt($status->created_at);
+                $answerMapper = new Model_Answer_Mapper();
+                $answerMapper->save($answer);
+            }
 
             print "<tr style='background-color: ".(($odd = ! $odd)?"#ddd":"#eee")."'>";
             print "<td>".$status->user->screen_name."</td>";
@@ -112,11 +121,13 @@ class CronController extends Zend_Controller_Action
             return;
         }
 
-
-        
         // Fetch active question
         $mapper = new Model_Question_Mapper();
         $question = $mapper->findByPk($questionId);
+
+        /**
+         * @var $question Model_Question_Entity
+         */
 
         if ($question == null) {
             print "Question not found...";
@@ -143,9 +154,13 @@ class CronController extends Zend_Controller_Action
         var_dump($result);
     }
 
+
     public function parseanswersAction() {
+        // @TODO: What about the time we are between having a winner and the next question (question_id should be 0!)
+        // Config decides which is the current active status
+        $config = Phpoton_Status::loadStatus();
         $question_mapper = new Model_Question_Mapper();
-        $question = $question_mapper->getActiveQuestion();
+        $question = $question_mapper->findByPk($config->getQuestionId());
 
         if ($question == null) {
             print "No active questions!";

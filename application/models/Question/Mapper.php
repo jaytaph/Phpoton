@@ -47,7 +47,7 @@ class Model_Question_Mapper extends Model_Mapper {
         return $this->_fromArray($row->toArray());
     }
 
-    public function getPendingQuestion() {
+    public function getNextPendingQuestion() {
         $select = $this->_table->select()
                 ->where('tweet_dt IS NULL')
                 ->where('status = ?', 'pending')

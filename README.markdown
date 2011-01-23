@@ -13,7 +13,8 @@ TODO
     [ ] create cronjob to glue everything together
     [ ] create decent web interface
     [ ] moderation backend (with zend_auth authentication)
-    [ ] status table has question_id, and questions has a active-enum.. conflicts!
+    [X] status table has question_id, and questions has a active-enum.. conflicts! (
+    [ ] implement time limit for answers
 
 TODO v2
 ------------
