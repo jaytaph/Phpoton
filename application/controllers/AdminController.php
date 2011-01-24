@@ -19,7 +19,7 @@ class AdminController extends Zend_Controller_Action
 
 
     public function init() {
-        //$this->_helper->viewRenderer->setNoRender(true);
+        $this->_helper->layout()->getView()->headTitle('@PHPoton Administration Panel');
     }
 
     /**

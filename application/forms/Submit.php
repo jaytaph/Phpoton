@@ -1,6 +1,8 @@
 <?php
 
 class Form_Submit extends Zend_Form {
+    const MAX_QUESTION_LENGTH = 120;
+
     public function __construct($options = null) {
         parent::__construct($options);
 
@@ -23,7 +25,15 @@ class Form_Submit extends Zend_Form {
                 ->setRequired(true)
                 ->addValidator('NotEmpty')
                 ->setAttrib('cols', 50)
-                ->setAttrib('rows', 3);
+                ->setAttrib('rows', 3)
+                ->setAttrib('onKeyDown','limitText(this.form.question,this.form.countdown,'.self::MAX_QUESTION_LENGTH.');')
+                ->setAttrib('onKeyUp','limitText(this.form.question,this.form.countdown,'.self::MAX_QUESTION_LENGTH.');');
+
+        $countdown = new Zend_Form_Element_Text('countdown');
+        $countdown->setAttrib('readonly', 'readonly')
+                ->setAttrib('size', 3)
+                ->setValue(self::MAX_QUESTION_LENGTH)
+                ->setLabel('You have');
 
         $answer = new Zend_Form_Element_Text('answer');
         $answer->setLabel('Answer')
@@ -46,7 +56,7 @@ class Form_Submit extends Zend_Form {
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Submit question to phpoton');
 
-        $this->addElements(array($fullname, $question, $answer, $captcha, $submit));
+        $this->addElements(array($fullname, $question, $countdown, $answer, $captcha, $submit));
     }
 }
  
