@@ -33,7 +33,7 @@ class Form_Submit extends Zend_Form {
         $countdown->setAttrib('readonly', 'readonly')
                 ->setAttrib('size', 3)
                 ->setValue(self::MAX_QUESTION_LENGTH)
-                ->setLabel('You have');
+                ->setDescription('chars left');
 
         $answer = new Zend_Form_Element_Text('answer');
         $answer->setLabel('Answer')
