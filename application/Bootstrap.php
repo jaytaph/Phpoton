@@ -1,6 +1,7 @@
 <?php
 
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
+    protected $_config;
 
     function __construct($application) {
         parent::__construct($application);
@@ -9,25 +10,39 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         date_default_timezone_set("Europe/Amsterdam");
 
         // Load config into register
-        $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini', APPLICATION_ENV);
-        Zend_Registry::set('config', $config);
+        $this->_config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini', APPLICATION_ENV);
+        Zend_Registry::set('config', $this->_config);
+    }
 
+
+    /**
+     * Initializes twitter object
+     */
+    protected function _initTwitter() {
         // Initialize and save twitter object
         $accessToken = new Zend_Oauth_Token_Access();
-        $accessToken->setToken($config->settings->twitter->accessToken)
-                    ->setTokenSecret($config->settings->twitter->accessTokenSecret);
+        $accessToken->setToken($this->_config->settings->twitter->accessToken)
+                    ->setTokenSecret($this->_config->settings->twitter->accessTokenSecret);
 
-        $data = array('username' => $config->settings->twitter->screenName,
+        $data = array('username' => $this->_config->settings->twitter->screenName,
                       'accessToken' => $accessToken);
         $twitter = new Zend_Service_Twitter($data);
 
         Zend_Registry::set('twitter', $twitter);
+    }
 
+    /**
+     * Initializes default database
+     */
+    protected function _initDatabase() {
         // Initialize DB connection
-        $db = Zend_Db::factory($config->resources->db);
+        $db = Zend_Db::factory($this->_config->resources->db);
         Zend_Db_Table_Abstract::setDefaultAdapter($db);
     }
 
+    /**
+     * Initializes resource loaders
+     */
     protected function _initLoaderResource()
     {
         // @TODO: add to application.ini
@@ -55,6 +70,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         ));
     }
 
+    /**
+     * Initializes routers
+     */
     protected function _initRouters()
     {
         // @TODO: add to application.ini
