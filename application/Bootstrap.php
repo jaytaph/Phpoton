@@ -16,6 +16,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
 
     /**
+     * Initializes zend layout
+     */
+    protected function _initLayout() {
+        Zend_Layout::startMvc(array('layoutPath' => APPLICATION_PATH.'/views/layouts'));
+    }
+
+    /**
      * Initializes twitter object
      */
     protected function _initTwitter() {
