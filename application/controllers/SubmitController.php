@@ -3,6 +3,11 @@
 class SubmitController extends Zend_Controller_Action
 {
 
+    public function preDispatch()
+    {
+        $this->view->addFilter('TwitterLink');
+    }
+
     public function init()
     {
         $this->_helper->layout()->getView()->headTitle('Submit your question to @PHPoton');

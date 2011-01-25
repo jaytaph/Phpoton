@@ -92,5 +92,20 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         $controller = Zend_Controller_Front::getInstance();
         $controller->setRouter($router);
     }
+
+
+    protected function _initNavigation()
+    {
+//        $container = new Zend_Navigation_Page_Mvc(
+//            array('controller' => 'index', 'action' => 'index', 'label' => 'Home'),
+//            array('controller' => 'index', 'action' => 'faq', 'label' => 'F.A.Q.'),
+//            array('controller' => 'index', 'action' => 'tweets', 'label' => 'Tweets'),
+//            array('controller' => 'index', 'action' => 'questions', 'label' => 'Questions'),
+//            array('controller' => 'index', 'action' => 'stats', 'label' => 'Statistics'),
+//            array('controller' => 'admin', 'action' => 'index', 'label' => 'Admin')
+//        );
+//        $navigation = new Zend_Navigation($container);
+//        Zend_Registry::set('navigation', $navigation);
+    }
 }
 

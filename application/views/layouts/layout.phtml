@@ -9,7 +9,7 @@
 <body>
   <?php echo $this->render('header.phtml') ?>
 
-  <div id="nav"><?php echo $this->placeholder('nav') ?></div>
+  <div id="nav"><?php echo $this->navigation()->menu(); ?></div>
 
   <div id="content"><?php echo $this->layout()->content ?></div>
 

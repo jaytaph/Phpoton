@@ -5,6 +5,8 @@ class AdminController extends Zend_Controller_Action
     protected $_publicActions = array("login");
 
     public function preDispatch() {
+        $this->view->addFilter('TwitterLink');
+        
         // Return immediately when we are requesting a public action (without login)
         if (in_array($this->getRequest()->getActionName(), $this->_publicActions)) {
             return;
