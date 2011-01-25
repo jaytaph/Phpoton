@@ -49,6 +49,10 @@ class IndexController extends Zend_Controller_Action
      */
     public function questionAction() {
         $id = (int) $this->getRequest()->getParam('id');
+        if ($id == 0) {
+            $mainStatus = Phpoton_Status::loadStatus();
+            $id = $mainStatus->getQuestionId();
+        }
 
         $mapper = new Model_Question_Mapper();
         $question = $mapper->findByPk($id);
@@ -77,6 +81,7 @@ class IndexController extends Zend_Controller_Action
                 break;
         }
     }
+
 
     public function statsAction() {
         $mapper = new Model_Question_Mapper();
