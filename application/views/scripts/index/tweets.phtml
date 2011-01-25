@@ -1,0 +1,12 @@
+<h1>@PHPoton tweets</h1>
+
+<p>Last 20 phpoton tweets...</p>
+
+<table>
+<?php foreach ($this->tweets as $tweet) : ?>
+        <tr>
+            <td><?php echo $tweet->created_at ?></td>
+            <td><?php echo $tweet->text ?></td>
+        </tr>
+<?php endforeach; ?>
+</table>

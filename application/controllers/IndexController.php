@@ -32,6 +32,12 @@ class IndexController extends Zend_Controller_Action
     }
 
 
+    public function tweetsAction() {
+        $tweets = new Model_Tweets();
+        $this->view->tweets = $tweets->getTweets();
+    }
+
+
     /**
      * Display status of each question
      * @return void
