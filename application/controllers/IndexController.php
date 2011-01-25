@@ -99,13 +99,30 @@ class IndexController extends Zend_Controller_Action
 
         $odd = false;
         foreach ($mapper->fetchAll() as $question) {
+            if (! $question->isVisible()) continue;
+
+            /**
+             * @var $question Model_Question_Entity
+             */
             print "<tr style='background-color: ".(($odd = ! $odd)?"#ddd":"#eee")."'>";
             print "<td align=right>".$question->getId()."</td>";
             print "<td align=right>".$question->getReplyCount()."</td>";
             print "<td align=right>".$question->getCorrectReplyCount()."</td>";
-            print "<td>".$question->getWinner()."</td>";
+            if ($question->isActive()) {
+                print "<td>none yet</td>";
+            } else if ($question->isTimedOut()) {
+                print "<td>nobody knew</td>";
+            } else if ($question->isAnswered()) {
+                print "<td>".$question->getWinnerTweep()->getScreenName()."</td>";
+            } else {
+                print "<td>&nbsp;</td>";
+            }
             print "<td>".$question->getQuestion()."</td>";
-            print "<td>".$question->getAnswer()."</td>";
+            if ($question->isFinished()) {
+                print "<td>".$question->getAnswer()."</td>";
+            } else {
+                print "<td>&nbsp;</td>";
+            }
             print "<td>".$question->getTweetDt()."</td>";
             print "</tr>";
         }

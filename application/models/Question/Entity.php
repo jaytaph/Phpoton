@@ -13,9 +13,51 @@ class Model_Question_Entity extends Model_Entity {
 
     protected $_winning_tweep = null;      // Lazy loading tweep info
 
+
+    /**
+     * Question is passed moderation and pending state
+     * @return bool
+     */
+    function isVisible() {
+        $state = $this->getStatus();
+        return ($state != "moderation" && $state != "pending");
+    }
+
+    /**
+     * Question is currently active
+     */
+    function isActive() {
+        $state = $this->getStatus();
+        return ($state == "active");
+    }
+
+    /**
+     * Nobody new the question in the time limit
+     */
+    function isTimedOut() {
+        $state = $this->getStatus();
+        return ($state == "done" && $this->getWinningAnswerId() == null);
+    }
+    /**
+     * Question is answered correctly
+     */
+    function isAnswered() {
+        $state = $this->getStatus();
+        return ($state == "done" && $this->getWinningAnswerId() != null);
+    }
+
+    /**
+     * Question is finished (either answered or timed out). 
+     */
+    function isFinished() {
+        return ($this->isAnswered() || $this->isTimedOut());
+    }
+
+
     public function getReplyCount() {
-        // @TODO
-        return rand(1, 100);
+        $mapper = new Model_Answer_Mapper();
+        $count = $mapper->fetchCount($this->getId());
+        return $count;
     }
 
     public function getCorrectReplyCount() {
