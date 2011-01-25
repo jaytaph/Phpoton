@@ -102,7 +102,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         $container[] = new Zend_Navigation_Page_Mvc(array('controller' => 'index',  'action' => 'score',     'label' => 'Scoreboard'));
         $container[] = new Zend_Navigation_Page_Mvc(array('controller' => 'index',  'action' => 'faq',       'label' => 'F.A.Q.'));
         $container[] = new Zend_Navigation_Page_Mvc(array('controller' => 'index',  'action' => 'tweets',    'label' => '@PHPoton Tweets'));
-        $container[] = new Zend_Navigation_Page_Mvc(array('controller' => 'index',  'action' => 'questions', 'label' => 'Questions'));
+        $container[] = new Zend_Navigation_Page_Mvc(array('controller' => 'index',  'action' => 'question',  'label' => 'Questions'));
         $container[] = new Zend_Navigation_Page_Mvc(array('controller' => 'index',  'action' => 'stats',     'label' => 'Statistics'));
         $container[] = new Zend_Navigation_Page_Mvc(array('controller' => 'admin',  'action' => 'index',     'label' => 'Admin'));
 

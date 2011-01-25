@@ -63,6 +63,7 @@ class IndexController extends Zend_Controller_Action
             return;
         }
 
+        // @TODO: this->render does not display the layout/navigation menu
         switch ($question->getStatus()) {
             case "moderation" :
                 $this->render("question/moderation");

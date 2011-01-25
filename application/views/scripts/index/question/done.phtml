@@ -8,6 +8,6 @@
   <tr><td>Status:</td><td><b><?php echo $this->escape($this->question->getStatus()); ?></b></td></tr>
   <tr><td>Replies:</td><td><b><?php echo $this->escape($this->question->getReplyCount()); ?></b></td></tr>
   <tr><td>Correct replies:</td><td><b><?php echo $this->escape($this->question->getReplyCount()); ?></b></td></tr>
-  <tr><td>Winner:</td><td><b><?php echo $this->escape($this->question->getWinner()); ?></b></td></tr>
+  <tr><td>Winner:</td><td><b>[twitter:<?php echo $this->escape($this->question->getWinnerTweep()->getScreenName()); ?>]</b></td></tr>
   <tr><td colspan=2>&nbsp;</td></tr>
 </table>

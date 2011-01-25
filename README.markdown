@@ -5,7 +5,6 @@ A (simple) tweetbot.
 
 TODO
 -----------
-    [ ] twitter's status_id is treated as a sequential number when ordering replies. We should not rely on this fact.
     [X] submit textarea must have a "140 chars left counter"
     [X] service to convert twitter id to screen-name (and to be added to the tweeps-table)
     [X] parse answers
@@ -18,5 +17,6 @@ TODO
 
 TODO v2
 ------------
+    [ ] twitter's status_id is treated as a sequential number when ordering replies. We should not rely on this fact.
     [ ] Create "groups" with scores
     [ ] Adding users to groups by group leader
