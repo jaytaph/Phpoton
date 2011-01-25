@@ -10,7 +10,7 @@ TODO
     [X] service to convert twitter id to screen-name (and to be added to the tweeps-table)
     [X] parse answers
     [ ] create cronjob to glue everything together
-    [ ] create decent web interface
+    [i] create decent web interface
     [i] moderation backend (with zend_auth authentication)
     [X] status table has question_id, and questions has a active-enum.. conflicts! (
     [ ] implement time limit for answers

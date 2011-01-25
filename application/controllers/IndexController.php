@@ -86,48 +86,34 @@ class IndexController extends Zend_Controller_Action
     public function statsAction() {
         $mapper = new Model_Question_Mapper();
 
-        print "<table>";
-        print "<tr>";
-        print "<th>#</th>";
-        print "<th>Replies</th>";
-        print "<th>Correct</th>";
-        print "<th>Winner</th>";
-        print "<th>Question</th>";
-        print "<th>Answer</th>";
-        print "<th>Tweeted on</th>";
-        print "</tr>";
+        $this->view->stats = array();
 
-        $odd = false;
         foreach ($mapper->fetchAll() as $question) {
             if (! $question->isVisible()) continue;
 
-            /**
-             * @var $question Model_Question_Entity
-             */
-            print "<tr style='background-color: ".(($odd = ! $odd)?"#ddd":"#eee")."'>";
-            print "<td align=right>".$question->getId()."</td>";
-            print "<td align=right>".$question->getReplyCount()."</td>";
-            print "<td align=right>".$question->getCorrectReplyCount()."</td>";
+            $stat = new StdClass();
+            $stat->id = $question->getId();
+            $stat->replies = $question->getReplyCount();
+            $stat->correct = $question->getCorrectReplyCount();
             if ($question->isActive()) {
-                print "<td>none yet</td>";
+                $stat->winner = "none yet";
             } else if ($question->isTimedOut()) {
-                print "<td>nobody knew</td>";
+                $stat->winner = "nobody knew";
             } else if ($question->isAnswered()) {
-                print "<td>".$question->getWinnerTweep()->getScreenName()."</td>";
+                $stat->winner = $question->getWinnerTweep()->getScreenName();
             } else {
-                print "<td>&nbsp;</td>";
+                $stat->winner = "&nbsp;";
             }
-            print "<td>".$question->getQuestion()."</td>";
+            $stat->question = $question->getQuestion();
             if ($question->isFinished()) {
-                print "<td>".$question->getAnswer()."</td>";
+                $stat->answer = $question->getAnswer();
             } else {
-                print "<td>&nbsp;</td>";
+                $stat->answer = "&nbsp;";
             }
-            print "<td>".$question->getTweetDt()."</td>";
-            print "</tr>";
+            $stat->tweetedat = $question->getTweetDt();
+
+            $this->view->stats[] = $stat;
         }
-        print "</table>";
-        exit;
     }
 
 }

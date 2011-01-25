@@ -1,0 +1,24 @@
+<h2>Question statistics</h2>
+
+<table>
+  <tr>
+    <td>#</td>
+    <td><strong>Replies</strong></td>
+    <td><strong>Correct replies</strong></td>
+    <td><strong>Winner</strong></td>
+    <td><strong>Question</strong></td>
+    <td><strong>Answer</strong></td>
+    <td><strong>Tweeted at</strong></td>
+  </tr>
+<?php foreach ($this->stats as $stat) : ?>
+  <tr>
+    <td><?php echo $stat->id ?></td>
+    <td><?php echo $stat->replies ?></td>
+    <td><?php echo $stat->correct ?></td>
+    <td><?php echo $stat->winner ?></td>
+    <td><?php echo $stat->question ?></td>
+    <td><?php echo $stat->answer ?></td>
+    <td><?php echo $stat->tweetedat ?></td>
+  </tr>
+<?php endforeach; ?>
+</table>
