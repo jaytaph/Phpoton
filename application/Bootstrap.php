@@ -96,16 +96,15 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
     protected function _initNavigation()
     {
-//        $container = new Zend_Navigation_Page_Mvc(
-//            array('controller' => 'index', 'action' => 'index', 'label' => 'Home'),
-//            array('controller' => 'index', 'action' => 'faq', 'label' => 'F.A.Q.'),
-//            array('controller' => 'index', 'action' => 'tweets', 'label' => 'Tweets'),
-//            array('controller' => 'index', 'action' => 'questions', 'label' => 'Questions'),
-//            array('controller' => 'index', 'action' => 'stats', 'label' => 'Statistics'),
-//            array('controller' => 'admin', 'action' => 'index', 'label' => 'Admin')
-//        );
-//        $navigation = new Zend_Navigation($container);
-//        Zend_Registry::set('navigation', $navigation);
+        $container = array();
+        $container[] = new Zend_Navigation_Page_Mvc(array('controller' => 'index', 'action' => 'index', 'label' => 'Home'));
+        $container[] = new Zend_Navigation_Page_Mvc(array('controller' => 'index', 'action' => 'faq', 'label' => 'F.A.Q.'));
+        $container[] = new Zend_Navigation_Page_Mvc(array('controller' => 'index', 'action' => 'tweets', 'label' => 'Tweets'));
+        $container[] = new Zend_Navigation_Page_Mvc(array('controller' => 'index', 'action' => 'questions', 'label' => 'Questions'));
+        $container[] = new Zend_Navigation_Page_Mvc(array('controller' => 'index', 'action' => 'stats', 'label' => 'Statistics'));
+        $container[] = new Zend_Navigation_Page_Mvc(array('controller' => 'admin', 'action' => 'index', 'label' => 'Admin'));
+
+        Zend_Registry::set('navigation', $container);
     }
 }
 

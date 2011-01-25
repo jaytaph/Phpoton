@@ -12,14 +12,7 @@ class IndexController extends Zend_Controller_Action
     {
         $this->_helper->layout()->getView()->headTitle('@PHPoton');
 
-        $container = array();
-        $container[] = new Zend_Navigation_Page_Mvc(array('controller' => 'index', 'action' => 'index', 'label' => 'Home'));
-        $container[] = new Zend_Navigation_Page_Mvc(array('controller' => 'index', 'action' => 'faq', 'label' => 'F.A.Q.'));
-        $container[] = new Zend_Navigation_Page_Mvc(array('controller' => 'index', 'action' => 'tweets', 'label' => 'Tweets'));
-        $container[] = new Zend_Navigation_Page_Mvc(array('controller' => 'index', 'action' => 'questions', 'label' => 'Questions'));
-        $container[] = new Zend_Navigation_Page_Mvc(array('controller' => 'index', 'action' => 'stats', 'label' => 'Statistics'));
-        $container[] = new Zend_Navigation_Page_Mvc(array('controller' => 'admin', 'action' => 'index', 'label' => 'Admin'));
-
+        $container = Zend_Registry::get('navigation');
         $this->view->navigation(new Zend_Navigation($container));
     }
 

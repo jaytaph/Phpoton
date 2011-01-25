@@ -5,9 +5,7 @@ class AdminController extends Zend_Controller_Action
     protected $_publicActions = array("login");
 
     public function preDispatch() {
-        $this->view->addFilter('TwitterLink');
-        
-        // Return immediately when we are requesting a public action (without login)
+        // Return when we are requesting a public action (without login)
         if (in_array($this->getRequest()->getActionName(), $this->_publicActions)) {
             return;
         }
@@ -21,7 +19,16 @@ class AdminController extends Zend_Controller_Action
 
 
     public function init() {
-        $this->_helper->layout()->getView()->headTitle('@PHPoton Administration Panel');
+        // Add [twitter:] parser
+        $this->view->addFilter('TwitterLink');
+
+        // Set html title
+        $this->_helper->layout()->getView()->headTitle('@PHPoton - Administration Panel');
+
+        // Set navigation
+        $container = Zend_Registry::get('navigation');
+        $this->view->navigation(new Zend_Navigation($container));
+
     }
 
     /**
