@@ -3,21 +3,24 @@
 class SubmitController extends Zend_Controller_Action
 {
 
-    public function preDispatch()
+    public function init()
     {
+        // Set html title
+        $this->_helper->layout()->getView()->headTitle('Submit your question to @PHPoton');
+
+        // Set navigation
+        $container = Zend_Registry::get('navigation');
+        $this->view->navigation(new Zend_Navigation($container));
+
         $this->view->addFilter('TwitterLink');
     }
 
-    public function init()
-    {
-        $this->_helper->layout()->getView()->headTitle('Submit your question to @PHPoton');
-    }
-
     public function indexAction() {
+        // Add javascript to the html
         $this->_helper->layout()->getView()->headScript()->appendFile('/js/textlimit.js');
-        
-        $form = new Form_Submit();
 
+        // Init, and validate form
+        $form = new Form_Submit();
         if ($this->getRequest()->isPost()) {
             $data = $this->getRequest()->getPost();
             if ($form->isValid($data)) {

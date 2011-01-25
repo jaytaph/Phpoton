@@ -28,7 +28,6 @@ class AdminController extends Zend_Controller_Action
         // Set navigation
         $container = Zend_Registry::get('navigation');
         $this->view->navigation(new Zend_Navigation($container));
-
     }
 
     /**

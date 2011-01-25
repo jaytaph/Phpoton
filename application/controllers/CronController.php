@@ -21,12 +21,15 @@ class CronController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
     }
 
+    
     public function indexAction()
     {
         // Does nothing
     }
 
-    public function tweetquestionAction() {
+
+    public function tweetquestionAction()
+    {
         // Find a pending question
         $mapper = new Model_Question_Mapper();
         $question = $mapper->getActiveQuestion();
@@ -61,7 +64,8 @@ class CronController extends Zend_Controller_Action
     }
 
     
-    public function retrieverepliesAction() {
+    public function retrieverepliesAction()
+    {
         // Get status object
         $mainStatus = Phpoton_Status::loadStatus();
         
@@ -114,7 +118,8 @@ class CronController extends Zend_Controller_Action
     }
 
 
-    public function tweetwinnerAction() {
+    public function tweetwinnerAction()
+    {
         $questionId = (int) $this->getRequest()->getParam('id');
         if ($questionId == null) {
             print "No question Id";
@@ -155,8 +160,8 @@ class CronController extends Zend_Controller_Action
     }
 
 
-    public function parseanswersAction() {
-        // @TODO: What about the time we are between having a winner and the next question (question_id should be 0!)
+    public function parseanswersAction()
+    {
         // Config decides which is the current active status
         $config = Phpoton_Status::loadStatus();
         $question_mapper = new Model_Question_Mapper();

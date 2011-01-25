@@ -14,6 +14,7 @@ TODO
     [i] moderation backend (with zend_auth authentication)
     [X] status table has question_id, and questions has a active-enum.. conflicts! (
     [ ] implement time limit for answers
+    [ ] implement scoreboard
 
 TODO v2
 ------------
