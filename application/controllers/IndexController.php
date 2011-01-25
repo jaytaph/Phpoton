@@ -26,7 +26,12 @@ class IndexController extends Zend_Controller_Action
     }
 
 
-    public function indexAction() {
+    public function indexAction()
+    {
+    }
+
+    
+    public function scoreAction() {
         $scoreboard = new Model_Scoreboard_Mapper();
         $this->view->topscore = $scoreboard->getTopScore(20);
     }

@@ -15,6 +15,10 @@ class SubmitController extends Zend_Controller_Action
         $this->view->addFilter('TwitterLink');
     }
 
+    /**
+     * Displays submit form (and handle POSTs)
+     * @return
+     */
     public function indexAction() {
         // Add javascript to the html
         $this->_helper->layout()->getView()->headScript()->appendFile('/js/textlimit.js');
@@ -37,7 +41,14 @@ class SubmitController extends Zend_Controller_Action
         $this->view->form = $form;
     }
 
-    
+
+    /**
+     * Handles the processing after form validation
+     * 
+     * @param Zend_Form $form
+     * @param array $data
+     * @return void
+     */
     protected function _process(Zend_Form $form, array $data) {
         $values = $form->getValidValues($data);
 

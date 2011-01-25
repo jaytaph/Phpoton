@@ -21,13 +21,19 @@ class CronController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
     }
 
-    
+
+    /**
+     * Does nothing
+     */
     public function indexAction()
     {
         // Does nothing
     }
 
 
+    /**
+     * Tweets a new question
+     */
     public function tweetquestionAction()
     {
         // Find a pending question
@@ -63,7 +69,10 @@ class CronController extends Zend_Controller_Action
         print "Question ".$question->getId()." tweeted: ".$tweetText.".\n";
     }
 
-    
+
+    /**
+     * Retrieves replies from twitter
+     */
     public function retrieverepliesAction()
     {
         // Get status object
@@ -118,6 +127,9 @@ class CronController extends Zend_Controller_Action
     }
 
 
+    /**
+     * Tweet a winner
+     */
     public function tweetwinnerAction()
     {
         $questionId = (int) $this->getRequest()->getParam('id');
@@ -160,6 +172,9 @@ class CronController extends Zend_Controller_Action
     }
 
 
+    /**
+     * Parse answers and check for a winner
+     */
     public function parseanswersAction()
     {
         // Config decides which is the current active status
