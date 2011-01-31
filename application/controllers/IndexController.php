@@ -64,7 +64,8 @@ class IndexController extends Zend_Controller_Action
         $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Array($questions));
         $paginator->setDefaultScrollingStyle('Sliding');
         $paginator->setItemCountPerPage(1);
-        $paginator->setCurrentPageNumber($this->_getParam('id'));
+        // Set correct page number (id param or latest question)
+        $paginator->setCurrentPageNumber($this->_getParam('id', $mapper->getActiveQuestion()->getId()));
         $this->view->questions = $paginator;
 
         if ($question == null) {
