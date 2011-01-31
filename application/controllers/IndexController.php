@@ -58,6 +58,15 @@ class IndexController extends Zend_Controller_Action
         $question = $mapper->findByPk($id);
         $this->view->question = $question;
 
+        /* Create a "range" of questions, we abuse the paginator for easy scrolling
+         * through all questions (1 question = 1 page) */
+        $questions = range(1, $mapper->getActiveQuestion()->getId(), 1);
+        $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Array($questions));
+        $paginator->setDefaultScrollingStyle('Sliding');
+        $paginator->setItemCountPerPage(1);
+        $paginator->setCurrentPageNumber($this->_getParam('id'));
+        $this->view->questions = $paginator;
+
         if ($question == null) {
             $this->render("question/notfound");
             return;

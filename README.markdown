@@ -14,6 +14,7 @@ TODO
     [X] status table has question_id, and questions has a active-enum.. conflicts! (
     [ ] implement time limit for answers
     [X] implement scoreboard
+    [X] questions should have a paginator as well
 
 TODO v2
 ------------

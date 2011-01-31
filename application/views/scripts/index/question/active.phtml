@@ -1,5 +1,7 @@
 <h3>Question statistics</h3>
 
+<?php echo $this->paginationControl($this->questions, 'Sliding', 'question-paginator.phtml'); ?>
+
 <table>
   <tr><td>Question:</td><td><b><?php echo $this->escape($this->question->getQuestion()); ?></b></td></tr>
   <tr><td colspan=2>&nbsp;</td></tr>
