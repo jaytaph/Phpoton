@@ -13,6 +13,25 @@ class Model_Question_Entity extends Model_Entity {
 
     protected $_winning_tweep = null;      // Lazy loading tweep info
 
+    function canChangeStatus() {
+        $changeable = array("moderation", "pending", "notapproved");
+        return in_array($this->getStatus(), $changeable);
+    }
+
+    function markAsActive() {
+        $config = Zend_Registry::get('config');
+
+        // Save current tweet time into the database
+        $this->setTweetDt(new Zend_Db_Expr('NOW()'));
+        $this->setTimeLimit($config->questions->timeout);
+        $mapper = new Model_Question_Mapper();
+        $mapper->save($this);
+
+        // Set current active question in status
+        $mainStatus = Phpoton_Status::loadStatus();
+        $mainStatus->setQuestionId($this->getId());
+        Phpoton_Status::saveStatus($mainStatus);
+    }
 
     /**
      * Question is passed moderation and pending state

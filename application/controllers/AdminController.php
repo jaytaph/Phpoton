@@ -36,6 +36,11 @@ class AdminController extends Zend_Controller_Action
      * @return void
      */
     public function indexAction() {
+        // Handle post request if needed
+        if ($this->getRequest()->isPost()) {
+            $this->_handlePost($_POST);
+        }
+
         $mapper = new Model_Question_Mapper();
 
         // @TODO: Maybe the mapper should return an iterator instead of an array?
@@ -115,6 +120,37 @@ class AdminController extends Zend_Controller_Action
             return true;
         }
         return false;
+    }
+
+
+    protected function _handlePost($data) {
+        /**
+         * @var $question Model_Question_Entity
+         */
+        // Find question
+        $mapper = new Model_Question_Mapper();
+        $question = $mapper->findByPk($data['q']);
+        if (! $question instanceof Model_Question_Entity) {
+            return;
+        }
+
+        // Set correct mode
+        switch ($_POST['status']) {
+            case "accept" :
+                if ($question->canChangeStatus()) {
+                    $question->setStatus("pending");
+                    $mapper->save($question);
+                }
+                break;
+            case "notaccept" :
+            default :
+                if ($question->canChangeStatus()) {
+                    $question->setStatus("notapproved");
+                    $mapper->save($question);
+                }
+                break;
+        }
+        var_dump($data);
     }
 
 }
