@@ -10,7 +10,7 @@ TODO
     [X] parse answers
     [ ] create cronjob to glue everything together
     [i] create decent web interface
-    [i] moderation backend (with zend_auth authentication)
+    [X] moderation backend (with zend_auth authentication)
     [X] status table has question_id, and questions has a active-enum.. conflicts! (
     [ ] implement time limit for answers
     [X] implement scoreboard
