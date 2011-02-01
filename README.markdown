@@ -15,6 +15,7 @@ TODO
     [ ] implement time limit for answers
     [X] implement scoreboard
     [X] questions should have a paginator as well
+    [X] question's should be removed. Statistics should display stats and should be paginated
 
 TODO v2
 ------------

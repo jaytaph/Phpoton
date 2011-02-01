@@ -77,23 +77,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         ));
     }
 
-    /**
-     * Initializes routers
-     */
-    protected function _initRouters()
-    {
-        // @TODO: add to application.ini
-        $router = new Zend_Controller_Router_Rewrite();
-
-        $router->addRoute('question',
-            new Zend_Controller_Router_Route('question/:id', array('controller' => 'index', 'action' => 'question'))
-        );
-
-        $controller = Zend_Controller_Front::getInstance();
-        $controller->setRouter($router);
-    }
-
-
     protected function _initNavigation()
     {
         Zend_Registry::set('navigation', $this->_config->settings->navigation);

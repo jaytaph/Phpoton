@@ -5,38 +5,48 @@ class IndexController extends Zend_Controller_Action
 
     public function preDispatch()
     {
+        // All these views support the [twitter:] markup
         $this->view->addFilter('TwitterLink');
     }
 
     public function init()
     {
+        // Set title of all views
         $this->_helper->layout()->getView()->headTitle('@PHPoton');
 
+        // Set navigation
         $container = Zend_Registry::get('navigation');
         $this->view->navigation(new Zend_Navigation($container));
     }
 
     /**
      * Displays FAQ
-     *
-     * @return void
      */
     public function faqAction()
     {
     }
 
 
+    /**
+     * Displays main screen
+     */
     public function indexAction()
     {
     }
 
-    
+
+    /**
+     * Display scoreboard
+     */
     public function scoreAction() {
         $scoreboard = new Model_Scoreboard_Mapper();
         $this->view->topscore = $scoreboard->getTopScore(20);
     }
 
 
+    /**
+     * Display tweets
+     */
     public function tweetsAction() {
         $tweets = new Model_Tweets();
         $this->view->tweets = $tweets->getTweets();
@@ -44,36 +54,28 @@ class IndexController extends Zend_Controller_Action
 
 
     /**
-     * Display status of each question
-     * @return void
+     * Display status of a question
      */
-    public function questionAction() {
-        $id = (int) $this->getRequest()->getParam('id');
-        if ($id == 0) {
-            $mainStatus = Phpoton_Status::loadStatus();
-            $id = $mainStatus->getQuestionId();
-        }
-
-        $mapper = new Model_Question_Mapper();
-        $question = $mapper->findByPk($id);
-        $this->view->question = $question;
-
-        /* Create a "range" of questions, we abuse the paginator for easy scrolling
-         * through all questions (1 question = 1 page) */
-        $questions = range(1, $mapper->getActiveQuestion()->getId(), 1);
-        $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Array($questions));
-        $paginator->setDefaultScrollingStyle('Sliding');
-        $paginator->setItemCountPerPage(1);
-        // Set correct page number (id param or latest question)
-        $paginator->setCurrentPageNumber($this->_getParam('id', $mapper->getActiveQuestion()->getId()));
-        $this->view->questions = $paginator;
-
-        if ($question == null) {
-            $this->render("question/notfound");
+    function questionAction() {
+        // Get question parameter
+        $id = $this->_getParam('id');
+        if (! $id) {
+            // Redirect back to stats when no ID is found
+            $this->_redirect("/index/stats");
             return;
         }
 
-        // @TODO: this->render does not display the layout/navigation menu
+        // Fetch question
+        $mapper = new Model_Question_Mapper();
+        $question = $mapper->findByPk($id);
+        if (! $question instanceof Model_Question_Entity) {
+            $this->render("question/notfound");
+            return;
+        }
+        
+        $this->view->question = $question;
+
+
         switch ($question->getStatus()) {
             case "moderation" :
                 $this->render("question/moderation");
@@ -95,36 +97,45 @@ class IndexController extends Zend_Controller_Action
 
 
     public function statsAction() {
+        // @TODO: Maybe a nice iterator with an filter on visible question?
+        $stats = array();
+
         $mapper = new Model_Question_Mapper();
-
-        $this->view->stats = array();
-
         foreach ($mapper->fetchAll() as $question) {
             if (! $question->isVisible()) continue;
 
             $stat = new StdClass();
             $stat->id = $question->getId();
             $stat->replies = $question->getReplyCount();
-            $stat->correct = $question->getCorrectReplyCount();
             if ($question->isActive()) {
-                $stat->winner = "none yet";
+                $stat->winner = "";
             } else if ($question->isTimedOut()) {
-                $stat->winner = "nobody knew";
+                $stat->winner = "timed out";
             } else if ($question->isAnswered()) {
-                $stat->winner = $question->getWinnerTweep()->getScreenName();
+                $stat->winner = "[twitter:".$question->getWinnerTweep()->getScreenName()."]";
             } else {
-                $stat->winner = "&nbsp;";
+                $stat->winner = "";
             }
             $stat->question = $question->getQuestion();
             if ($question->isFinished()) {
                 $stat->answer = $question->getAnswer();
             } else {
-                $stat->answer = "&nbsp;";
+                $stat->answer = "";
             }
             $stat->tweetedat = $question->getTweetDt();
 
-            $this->view->stats[] = $stat;
+            // @todo: change this into a wonat
+            $stat->wonat = $question->getTweetDt();
+
+            $stats[] = $stat;
         }
+
+        $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Array($stats));
+        $paginator->setDefaultScrollingStyle('Sliding');
+        $paginator->setItemCountPerPage(25);
+        $paginator->setCurrentPageNumber($this->_getParam('page'), 1);
+        $this->view->stats = $paginator;
+
     }
 
 }

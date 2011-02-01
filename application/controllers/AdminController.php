@@ -150,7 +150,6 @@ class AdminController extends Zend_Controller_Action
                 }
                 break;
         }
-        var_dump($data);
     }
 
 }

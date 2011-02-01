@@ -1,24 +1,28 @@
 <h2>Question statistics</h2>
 
+<?php echo $this->paginationControl($this->stats, 'Sliding', 'paginator.phtml'); ?>
+
 <table>
-  <tr>
+  <tr style="background-color: #D0D0D0">
     <td>#</td>
     <td><strong>Replies</strong></td>
-    <td><strong>Correct replies</strong></td>
-    <td><strong>Winner</strong></td>
     <td><strong>Question</strong></td>
     <td><strong>Answer</strong></td>
     <td><strong>Tweeted at</strong></td>
+    <td><strong>Time</strong></td>
+    <td><strong>Winner</strong></td>
+    <td>&nbsp;</td>
   </tr>
 <?php foreach ($this->stats as $stat) : ?>
-  <tr>
-    <td><?php echo $stat->id ?></td>
-    <td><?php echo $stat->replies ?></td>
-    <td><?php echo $stat->correct ?></td>
-    <td><?php echo $stat->winner ?></td>
-    <td><?php echo $stat->question ?></td>
-    <td><?php echo $stat->answer ?></td>
-    <td><?php echo $stat->tweetedat ?></td>
+  <tr style="background-color: <?php echo $this->cycle(array("#F0F0F0", "#FFFFFF"))->next()?>">
+    <td><?php echo $this->escape($stat->id); ?></td>
+    <td><?php echo $this->escape($stat->replies); ?></td>
+    <td><?php echo $this->escape($stat->question); ?></td>
+    <td><?php echo $this->escape($stat->answer); ?></td>
+    <td><?php echo $this->escape($stat->tweetedat); ?></td>
+    <td><?php echo $this->escape($stat->tweetedat - $stat->wonat); ?></td>
+    <td><?php echo $this->escape($stat->winner); ?></td>
+    <td><a href="<?php echo $this->url(array('action' => 'question', 'id' => $stat->id)); ?>">View details</a></td>
   </tr>
 <?php endforeach; ?>
 </table>

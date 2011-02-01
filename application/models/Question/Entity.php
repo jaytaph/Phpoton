@@ -39,7 +39,7 @@ class Model_Question_Entity extends Model_Entity {
      */
     function isVisible() {
         $state = $this->getStatus();
-        return ($state != "moderation" && $state != "pending");
+        return ($state == "active" || $state == "done");
     }
 
     /**
