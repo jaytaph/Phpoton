@@ -32,4 +32,4 @@ BUGS
     [ ] Direct messages are not shown
     [X] Accept/don't accept on admin screen
     [X] Clean function should be a service (both replies and answers should be cleaned)
-    [ ] When multiple users have the same number of points, they should have the same rank
+    [X] When multiple users have the same number of points, they should have the same rank
