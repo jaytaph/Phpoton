@@ -3,7 +3,7 @@
 class Phpoton_Shortener {
 
     /**
-     * Shortens URL through an 3rd party url shortner provider
+     * Shortens URL through an 3rd party url shortener provider
      * 
      * @static
      * @return string $url
