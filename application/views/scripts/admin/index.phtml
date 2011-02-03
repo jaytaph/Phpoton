@@ -12,8 +12,6 @@
     </tr>
 <?php
     foreach ($this->questions as $question) :
-//    print "<pre>";
-//    var_dump($question);
     switch ($question->getStatus()) {
         case "done" :
             $color = "#c0c0ff";
@@ -26,6 +24,9 @@
             break;
         case "notapproved" :
             $color = "#ff8080";
+            break;
+        case "active" :
+            $color = "#0000FF";
             break;
         default :
             $color = "white";
