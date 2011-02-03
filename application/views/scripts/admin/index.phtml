@@ -38,13 +38,14 @@
         <td><?php echo $question->getQuestion(); ?></td>
         <td><?php echo $question->getAnswer(); ?></td>
         <td><?php echo $question->getStatus(); ?></td>
-<?php   if ($question->getStatus() == "notapproved") : ?>
-        <td><form method=post><input type=hidden name=q value=<?php echo $question->getId();?>><input type=hidden name=status value='accept'><input type=submit value='Accept'></form></td>
-<?php   elseif ($question->getStatus() == "moderation" || $question->getStatus() == "pending") : ?>
-        <td><form method=post><input type=hidden name=q value=<?php echo $question->getId();?>><input type=hidden name=status value='noaccept'><input type=submit value='Dont accept'></form></td>
-<?php   else : ?>
-        <td>&nbsp;</td>
+        <td>&nbsp;
+<?php   if ($question->getStatus() == "moderation" || $question->getStatus() == "notapproved") : ?>
+        <form style='display:inline' method=post><input type=hidden name=q value=<?php echo $question->getId();?>><input type=hidden name=status value='accept'><input type=submit value='Accept'></form>
+<?php   endif;
+        if ($question->getStatus() == "moderation" || $question->getStatus() == "pending") : ?>
+        <form style='display:inline' method=post><input type=hidden name=q value=<?php echo $question->getId();?>><input type=hidden name=status value='noaccept'><input type=submit value='Dont accept'></form>
 <?php   endif; ?>
+        </td>
 
 
     </tr>
