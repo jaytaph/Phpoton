@@ -101,6 +101,11 @@ class CronController extends Zend_Controller_Action
             // Always save the highest status ID so we don't have to fetch these the next time
             if ($status->id > $mainStatus->getSinceId()) $mainStatus->setSinceId($status->id);
 
+            print ('New reply found : '.$status->text.'<br>');
+
+            // Add twitter user to our friends-list
+            $tmp = $twitter->friendshipCreate($status->user->id);
+
             // Don't save answers when there is no current question
             if ($mainStatus->getQuestionId() != 0) {
                 $answer = new Model_Answer_Entity();

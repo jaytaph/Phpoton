@@ -5,6 +5,7 @@ A (simple) tweetbot.
 
 TODO
 -----------
+    [X] Everybody who response to the bot must be followed
     [X] submit textarea must have a "140 chars left counter"
     [X] service to convert twitter id to screen-name (and to be added to the tweeps-table)
     [X] parse answers
