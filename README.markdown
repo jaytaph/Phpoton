@@ -17,18 +17,9 @@ TODO
     [X] implement scoreboard
     [X] questions should have a paginator as well
     [X] question's should be removed. Statistics should display stats and should be paginated
-    [ ] make cron only callable from CLI only
 
 TODO v2
 ------------
     [ ] Create "groups" with scores
     [ ] Adding users to groups by group leader
-
-
-BUGS
-------------
-    [X] Create-time in answers do not get entered
-    [X] Direct messages are not shown
-    [X] Accept/don't accept on admin screen
-    [X] Clean function should be a service (both replies and answers should be cleaned)
-    [X] When multiple users have the same number of points, they should have the same rank
+    [ ] make cron only callable from CLI only
