@@ -191,10 +191,7 @@ class Model_Question_Entity extends Model_Entity {
 
 
     public function isCorrectAnswer(Model_Answer_Entity $answer) {
-        $text = $this->getAnswer();
-        $text = strtolower($text);
-        $text = str_replace("?", "", $text);
-        $text = trim($text);
+        $text = Phpoton_Clean::cleanup($text);
         return ($answer->getCleanAnswer() == $text);
     }
 

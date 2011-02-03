@@ -31,5 +31,5 @@ BUGS
     [X] Create-time in answers do not get entered
     [ ] Direct messages are not shown
     [X] Accept/don't accept on admin screen
-    [ ] Clean function should be a service (both replies and answers should be cleaned)
+    [X] Clean function should be a service (both replies and answers should be cleaned)
     [ ] When multiple users have the same number of points, they should have the same rank

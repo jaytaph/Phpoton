@@ -12,12 +12,7 @@ class Model_Answer_Entity extends Model_Entity {
 
 
     public function getCleanAnswer() {
-        $answer = $this->getAnswer();
-        $answer = preg_replace("/@\w+/", "", $answer);
-        $answer = str_replace("?", "", $answer);
-        $answer = strtolower($answer);
-        $answer = trim($answer);
-        return $answer;
+        return Phpoton_Clean::cleanup($this->getAnswer());
     }
 
     /**
