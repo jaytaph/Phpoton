@@ -63,14 +63,6 @@ abstract class Model_Mapper {
         }
     }
 
-    public function fetchCount($question_id)
-    {
-        $select = $this->_table->select();
-        $select->from($this->_tableName, 'COUNT(*)')->where('question_id = ?', $question_id);
-        $count = $this->_table->getAdapter()->fetchOne($select);
-        return $count;
-    }
-
     abstract protected function _toArray(Model_Entity $obj);
     abstract protected function _fromArray(array $data);
 }

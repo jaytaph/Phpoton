@@ -72,13 +72,14 @@ class Model_Question_Entity extends Model_Entity {
 
     public function getReplyCount() {
         $mapper = new Model_Answer_Mapper();
-        $count = $mapper->fetchCount($this->getId());
+        $count = $mapper->fetchQuestionCount($this);
         return $count;
     }
 
     public function getCorrectReplyCount() {
-        // @TODO: Change into correct reply count
-        return rand(1, 100);
+        $mapper = new Model_Answer_Mapper();
+        $count = $mapper->fetchCorrectAnswerCount($this);
+        return $count;
     }
 
     /**
@@ -186,13 +187,6 @@ class Model_Question_Entity extends Model_Entity {
     public function getStatus()
     {
         return $this->_status;
-    }
-
-
-
-    public function isCorrectAnswer(Model_Answer_Entity $answer) {
-        $text = Phpoton_Clean::cleanup($text);
-        return ($answer->getCleanAnswer() == $text);
     }
 
     public function setWinningAnswerId($winning_answer_id)

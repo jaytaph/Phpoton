@@ -11,6 +11,7 @@ class Model_Status_Mapper extends Model_Mapper {
         $data = array();
         $data['id'] = $obj->getId();
         $data['since_id'] = $obj->getSinceId();
+        $data['since_dm_id'] = $obj->getSinceDmId();
         $data['sleeptime'] = $obj->getSleeptime();
         return $data;
     }
@@ -19,6 +20,7 @@ class Model_Status_Mapper extends Model_Mapper {
         $obj = new Model_Status_Entity();
         $obj->setId($data['id']);
         $obj->setSinceId($data['since_id']);
+        $obj->setSinceDmId($data['since_dm_id']);
         $obj->setSleeptime($data['sleeptime']);
         return $obj;
     }

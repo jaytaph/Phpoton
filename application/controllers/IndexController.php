@@ -100,6 +100,9 @@ class IndexController extends Zend_Controller_Action
         // @TODO: Maybe a nice iterator with an filter on visible question?
         $stats = array();
 
+        /**
+         * @var $question Model_Question_Entity
+         */
         $mapper = new Model_Question_Mapper();
         foreach ($mapper->fetchAll() as $question) {
             if (! $question->isVisible()) continue;

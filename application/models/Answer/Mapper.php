@@ -30,16 +30,35 @@ class Model_Answer_Mapper extends Model_Mapper {
     }
 
 
-    public function fetchSequentialAnswersForQuestion(Model_Question_Entity $question) {
+    public function fetchCorrectAnswers(Model_Question_Entity $question) {
         $select = $this->_table->select()
             ->where('question_id = ?', $question->getId())
-            ->order('status_id ASC');
+            ->where('answer LIKE ?', $question->getAnswer())
+            ->order('receive_dt ASC');
 
         $ret = array();
         foreach ($this->_table->fetchAll($select) as $record) {
             $ret[] = $this->_fromArray($record->toArray());
         }
         return $ret;
+    }
+
+    public function fetchQuestionCount(Model_Question_Entity $question, $onlyCorrectAnswers = false)
+    {
+        $select = $this->_table->select();
+        $select->from($this->_tableName, 'COUNT(*)')
+               ->where('question_id = ?', $question->getId());
+
+        if ($onlyCorrectAnswers) {
+            $select->where('answer LIKE ?', $question->getAnswer());
+        }
+        $count = $this->_table->getAdapter()->fetchOne($select);
+        return $count;
+    }
+
+    public function fetchCorrectAnswerCount(Model_Question_Entity $question)
+    {
+        return $this->fetchQuestionCount($question, true);
     }
 
 }

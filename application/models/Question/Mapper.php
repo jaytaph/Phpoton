@@ -61,5 +61,5 @@ class Model_Question_Mapper extends Model_Mapper {
 
         return $this->_fromArray($row->toArray());
     }
-
+    
 }

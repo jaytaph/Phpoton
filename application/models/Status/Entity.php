@@ -3,6 +3,7 @@
 class Model_Status_Entity extends Model_Entity {
     protected $_id;
     protected $_since_id;
+    protected $_since_dm_id;
     protected $_sleeptime;
 
     public function setId($id)
@@ -33,5 +34,15 @@ class Model_Status_Entity extends Model_Entity {
     public function getSleeptime()
     {
         return $this->_sleeptime;
+    }
+
+    public function setSinceDmId($since_dm_id)
+    {
+        $this->_since_dm_id = $since_dm_id;
+    }
+
+    public function getSinceDmId()
+    {
+        return $this->_since_dm_id;
     }
 }

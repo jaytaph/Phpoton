@@ -2,11 +2,13 @@
 
 <p>Last 20 phpoton tweets...</p>
 
-<table style='border: solid black 1px'>
+<table>
+  <tr style='background-color: #ccc'><td colspan=2>&nbsp;</td></tr>
 <?php foreach ($this->tweets as $tweet) : ?>
         <tr style="background-color: <?php echo $this->cycle(array("#F0F0F0", "#FFFFFF"))->next()?>">
             <td><?php echo $tweet->created_at ?></td>
             <td><?php echo $tweet->text ?></td>
         </tr>
 <?php endforeach; ?>
+  <tr style='background-color: #ccc'><td colspan=2>&nbsp;</td></tr>
 </table>

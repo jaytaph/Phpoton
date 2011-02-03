@@ -4,12 +4,11 @@
 
 <table>
   <tr style="background-color: #D0D0D0">
-    <td>#</td>
+    <td>Q #</td>
     <td><strong>Replies</strong></td>
     <td><strong>Question</strong></td>
     <td><strong>Answer</strong></td>
     <td><strong>Tweeted at</strong></td>
-    <td><strong>Time</strong></td>
     <td><strong>Winner</strong></td>
     <td>&nbsp;</td>
   </tr>
@@ -20,11 +19,10 @@
     <td><?php echo $this->escape($stat->question); ?></td>
     <td><?php echo $this->escape($stat->answer); ?></td>
     <td><?php echo $this->escape($stat->tweetedat); ?></td>
-    <td><?php echo $this->escape($stat->tweetedat - $stat->wonat); ?></td>
-    <td><?php echo $this->escape($stat->winner); ?></td>
+    <td><?php echo empty($stat->winner) ? "&nbsp;" : $this->escape($stat->winner); ?></td>
     <td><a href="<?php echo $this->url(array('action' => 'question', 'id' => $stat->id)); ?>">View details</a></td>
   </tr>
 <?php endforeach; ?>
-    <tr style="background-color: #D0D0D0"><td colspan=8>&nbsp;</td>
+    <tr style="background-color: #D0D0D0"><td colspan=7>&nbsp;</td>
     </tr>
 </table>
