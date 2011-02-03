@@ -13,7 +13,7 @@ TODO
     [i] create decent web interface
     [X] moderation backend (with zend_auth authentication)
     [X] status table has question_id, and questions has a active-enum.. conflicts! (
-    [ ] implement time limit for answers
+    [X] implement time limit for answers
     [X] implement scoreboard
     [X] questions should have a paginator as well
     [X] question's should be removed. Statistics should display stats and should be paginated

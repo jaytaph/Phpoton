@@ -18,6 +18,7 @@ class Model_Question_Mapper extends Model_Mapper {
         $data['tweet_dt'] = $obj->getTweetDt();
         $data['status'] = $obj->getStatus();
         $data['winning_answer_id'] = $obj->getWinningAnswerId();
+        $data['timelimit'] = $obj->getTimeLimit();
         return $data;
     }
 
@@ -32,6 +33,7 @@ class Model_Question_Mapper extends Model_Mapper {
         $obj->setTweetDt($data['tweet_dt']);
         $obj->setStatus($data['status']);
         $obj->setWinningAnswerId($data['winning_answer_id']);
+        $obj->setTimeLimit($data['timelimit']);
         return $obj;
     }
 

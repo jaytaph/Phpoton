@@ -3,7 +3,7 @@
 class Model_Status_Entity extends Model_Entity {
     protected $_id;
     protected $_since_id;
-    protected $_question_id;
+    protected $_sleeptime;
 
     public function setId($id)
     {
@@ -25,13 +25,13 @@ class Model_Status_Entity extends Model_Entity {
         return $this->_since_id;
     }
 
-    public function setQuestionId($question_id)
+    public function setSleeptime($sleeptime)
     {
-        $this->_question_id = $question_id;
+        $this->_sleeptime = $sleeptime;
     }
 
-    public function getQuestionId()
+    public function getSleeptime()
     {
-        return $this->_question_id;
+        return $this->_sleeptime;
     }
 }

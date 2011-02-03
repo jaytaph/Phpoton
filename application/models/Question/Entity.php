@@ -10,6 +10,7 @@ class Model_Question_Entity extends Model_Entity {
     protected $_tweet_dt;
     protected $_status;
     protected $_winning_answer_id;
+    protected $_time_limit;
 
     protected $_winning_tweep = null;      // Lazy loading tweep info
 
@@ -23,14 +24,10 @@ class Model_Question_Entity extends Model_Entity {
 
         // Save current tweet time into the database
         $this->setTweetDt(new Zend_Db_Expr('NOW()'));
-        $this->setTimeLimit($config->questions->timeout);
+        $this->setTimeLimit(time() + $config->settings->questions->timeout);
+        $this->setStatus('active');
         $mapper = new Model_Question_Mapper();
         $mapper->save($this);
-
-        // Set current active question in status
-        $mainStatus = Phpoton_Status::loadStatus();
-        $mainStatus->setQuestionId($this->getId());
-        Phpoton_Status::saveStatus($mainStatus);
     }
 
     /**
@@ -209,6 +206,16 @@ class Model_Question_Entity extends Model_Entity {
     public function getWinningAnswerId()
     {
         return $this->_winning_answer_id;
+    }
+
+    public function setTimeLimit($time_limit)
+    {
+        $this->_time_limit = $time_limit;
+    }
+
+    public function getTimeLimit()
+    {
+        return $this->_time_limit;
     }
 
 }
