@@ -97,16 +97,14 @@ class IndexController extends Zend_Controller_Action
 
 
     public function statsAction() {
-        // @TODO: Maybe a nice iterator with an filter on visible question?
-        $stats = array();
 
         /**
          * @var $question Model_Question_Entity
          */
         $mapper = new Model_Question_Mapper();
-        foreach ($mapper->fetchAll() as $question) {
-            if (! $question->isVisible()) continue;
-
+        $iterator = $mapper->fetchAll();
+        $iterator = new Phpoton_Iterator_Question_Visible($iterator);
+        foreach ($iterator as $question) {
             $stat = new StdClass();
             $stat->id = $question->getId();
             $stat->replies = $question->getReplyCount();

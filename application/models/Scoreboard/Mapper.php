@@ -39,6 +39,7 @@ class Model_Scoreboard_Mapper extends Model_Mapper {
                 ->order('score_points DESC')
                 ->limit($count);
 
+        // @TODO: create iterator
         $oldscore = -1;
         $rank = 1;
         $internal_rank = 0;

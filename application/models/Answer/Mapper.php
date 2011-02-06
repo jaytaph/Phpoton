@@ -36,11 +36,14 @@ class Model_Answer_Mapper extends Model_Mapper {
             ->where('answer LIKE ?', $question->getAnswer())
             ->order('receive_dt ASC');
 
-        $ret = array();
-        foreach ($this->_table->fetchAll($select) as $record) {
-            $ret[] = $this->_fromArray($record->toArray());
-        }
-        return $ret;
+        $iterator = new Photon_Iterator($this, $this->_table->fetchAll($select));
+        return $iterator;
+
+//        $ret = array();
+//        foreach ($this->_table->fetchAll($select) as $record) {
+//            $ret[] = $this->_fromArray($record->toArray());
+//        }
+//        return $ret;
     }
 
     public function fetchQuestionCount(Model_Question_Entity $question, $onlyCorrectAnswers = false)

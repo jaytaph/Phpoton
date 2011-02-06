@@ -35,11 +35,14 @@ abstract class Model_Mapper {
     function fetchAll() {
         $select = $this->_table->select();
 
-        $ret = array();
-        foreach ($this->_table->fetchAll($select) as $record) {
-            $ret[] = $this->_fromArray($record->toArray());
-        }
-        return $ret;
+        $iterator = new Phpoton_Iterator($this, $this->_table->fetchAll($select));
+        return $iterator;
+
+//        $ret = array();
+//        foreach ($this->_table->fetchAll($select) as $record) {
+//            $ret[] = $this->_fromArray($record->toArray());
+//        }
+//        return $ret;
     }
 
     function save(Model_Entity $obj) {
@@ -61,6 +64,10 @@ abstract class Model_Mapper {
             $where = $this->_table->getAdapter()->quoteInto($this->_primaryKey.' = ?', $obj->getId());
             $this->_table->update($data, $where);
         }
+    }
+
+    public function fromArray(array $data) {
+        return $this->_fromArray($data);
     }
 
     abstract protected function _toArray(Model_Entity $obj);
