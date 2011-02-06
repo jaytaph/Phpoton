@@ -44,7 +44,7 @@ class AdminController extends Zend_Controller_Action
         $mapper = new Model_Question_Mapper();
 
         // @TODO: Maybe the mapper should return an iterator instead of an array?
-        $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Array($mapper->fetchAll()));
+        $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Iterator($mapper->fetchAll()));
         $paginator->setDefaultScrollingStyle('Sliding');
         $paginator->setItemCountPerPage(25);
         $paginator->setCurrentPageNumber($this->_getParam('page'));
