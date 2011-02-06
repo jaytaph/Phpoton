@@ -5,6 +5,7 @@
 <table>
     <tr style='background-color: gray; color: white'>
         <th>&nbsp;#&nbsp;</th>
+        <th>Fullname</th>
         <th>Question</th>
         <th>Answer</th>
         <th>Status</th>
@@ -26,7 +27,7 @@
             $color = "#ff8080";
             break;
         case "active" :
-            $color = "#0000FF";
+            $color = "#ff00ff";
             break;
         default :
             $color = "white";
@@ -35,6 +36,7 @@
 ?>
     <tr style='background-color: <?php echo $color; ?>'>
         <td><?php echo $question->getId(); ?></td>
+        <td><?php echo $question->getFullname(); ?></td>
         <td><?php echo $question->getQuestion(); ?></td>
         <td><?php echo $question->getAnswer(); ?></td>
         <td><?php echo $question->getStatus(); ?></td>

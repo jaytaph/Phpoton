@@ -1,0 +1,48 @@
+body {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size:11px;
+	color:#555;
+	background-color:#F5F6F9;
+	margin:5px;
+	padding:0px;
+}
+
+
+a:link {
+	color:#168ef4;
+}
+
+a:visited {
+	color:#168ef4;
+}
+
+a:hover {
+	color:#168ef4;
+}
+
+a:active {
+	color:#168ef4;
+}
+
+.red {
+	font-weight:bold;
+	color:#F30;
+}
+
+h1 {
+	color:#039;
+	background-color:transparent;
+	font-size:18px;
+	font-weight:normal;
+	line-height:20px;
+}
+
+input, textarea {
+	border:1px inset #555;
+}
+
+img {
+	border:0;
+}
+
+/* ----- End Image Styling ----- */
