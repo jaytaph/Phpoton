@@ -186,7 +186,7 @@ class CronController extends Zend_Controller_Action
         if ($question->getStatus() != "done") return;
 
         // Shorten URL
-        $url = Phpoton_Shortener::shorten("http://phpoton.com/question/".$question->getId());
+        $url = Phpoton_Shortener::shorten("http://phpoton.com/index/question/id/".$question->getId());
 
         // Generate tweet text
         if ($question->getWinnerTweep() == null) {
