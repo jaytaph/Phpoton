@@ -39,24 +39,7 @@ class Model_Scoreboard_Mapper extends Model_Mapper {
                 ->order('score_points DESC')
                 ->limit($count);
 
-        // @TODO: create iterator
-        $oldscore = -1;
-        $rank = 1;
-        $internal_rank = 0;
-        foreach ($this->_table->fetchAll($select) as $record) {
-            $internal_rank++;
-            if ($oldscore != $record['score_points']) $rank = $internal_rank;
-
-            $score = new Model_Score();
-            $score->setTwitterId($record['twitter_id']);
-            $score->setPoints($record['score_points']);
-            $score->setRank($rank);
-            $scoreboard[] = $score;
-
-            $oldscore = $record['score_points'];
-        }
-
-        return $scoreboard;
+        return new Phpoton_Iterator_Score($this, $this->_table->fetchAll($select));
     }
 
 

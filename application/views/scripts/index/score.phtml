@@ -5,7 +5,9 @@
     <tr><td>
 
         <table width=100%>
-        <?php foreach ($this->topscore as $score) : ?>
+        <?php
+          $iterator = new LimitIterator($this->topscore, 0, count($this->topscore) / 2);
+          foreach ($iterator as $score) : ?>
           <tr style="background-color: <?php echo $this->cycle(array("#F0F0F0", "#FFFFFF"))->next()?>">
             <td>Rank #<?php echo $this->escape($score->getRank());?></td>
             <td>[twitter:<?php echo $this->escape($score->getTwitterInfo()->getScreenName()); ?>]</td>
@@ -17,7 +19,9 @@
     </td><td>
 
         <table width=100%>
-        <?php foreach ($this->topscore as $score) : ?>
+        <?php
+            $iterator = new LimitIterator($this->topscore, count($this->topscore) / 2);
+            foreach ($iterator as $score) : ?>
           <tr style="background-color: <?php echo $this->cycle(array("#F0F0F0", "#FFFFFF"))->next()?>">
             <td>Rank #<?php echo $this->escape($score->getRank());?></td>
             <td>[twitter:<?php echo $this->escape($score->getTwitterInfo()->getScreenName()); ?>]</td>
