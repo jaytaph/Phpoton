@@ -20,6 +20,10 @@ TODO
 
 TODO v2
 ------------
-    [ ] Create "groups" with scores
+    [ ] More points (10, 7, 5, 3, 1)
+    [ ] Create "groups" with scoring (first answer gets a point in the group)
+    [ ] Each question runs fixed amount of time
     [ ] Adding users to groups by group leader
     [ ] make cron only callable from CLI only
+    [ ] One answer per user (tweet message back to user if answered multiple times)
+    [ ] Blocklist (from who?)
