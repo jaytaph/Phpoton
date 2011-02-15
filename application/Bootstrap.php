@@ -7,12 +7,16 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     protected $_config;
 
     function __construct($application) {
+        /**
+         * @var $application Zend_Application
+         */
         parent::__construct($application);
 
         // Set timezone
         date_default_timezone_set("Europe/Amsterdam");
 
-        // Load config into register
+        // Create new config
+        // @TODO: Didn't we already do this inside the index.php (Zend_Application)???
         $this->_config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini', APPLICATION_ENV, true);
 
         // Merge with user.ini settings if they exists
