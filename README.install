@@ -1,0 +1,16 @@
+Adding phpoton bot to your own twitter account:
+
+
+1. Add your app to the twitter-client:
+	Login to the twitter account
+	Goto twitter.com/apps/new
+		application-type: browser
+		callback url: ???
+		Default access type: Read&Write
+
+2. Add consumer key and secret to the admincontroller.php/setuptwitterAction
+3. Login into the website (/admin) and goto /admin/setuptwitter
+4. we are redirected to google, allow access to application
+5. You are redirected back to the website where you will see the access 
+   token and secret. Add them to your application.ini
+6. Done

@@ -91,6 +91,30 @@ class AdminController extends Zend_Controller_Action
     }
 
 
+    public function setuptwitterAction() {
+        $config = array(
+            'callbackUrl' => 'http://'.$_SERVER['HTTP_HOST'].'/admin/setuptwitter',
+            'siteUrl' => 'http://twitter.com/oauth',
+            'consumerKey' => 'LnyRgd4Ya7tst2VNuuH7w',
+            'consumerSecret' => 'w7xf0jdkfSGoWEzknfYV0zUSlGgglzCral1yx0Qojic');
+        $consumer = new Zend_Oauth_Consumer($config);
+
+        if (empty($_GET)) {
+            // No request yet, initiate oauth to redirect to twitter
+            $token = $consumer->getRequestToken();
+            $_SESSION['TWITTER_REQUEST_TOKEN'] = serialize($token);
+            $consumer->redirect();
+        } else {
+            // Back from twitter, we have our access token
+            $token = $consumer->getAccessToken($_GET, unserialize($_SESSION['TWITTER_REQUEST_TOKEN']));
+            print "Please fill in these items in your application.ini:<br>";
+            print "settings.twitter.accessToken: <b>".$token->getToken()."</b><br>";
+            print "settings.twitter.accessTokenSecret: <b>".$token->getTokenSecret()."</b><br>";
+        }
+        exit;
+    }
+
+
     /**
      * Creates and returns authentication adapter
      * 
