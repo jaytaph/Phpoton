@@ -17,6 +17,7 @@ TODO
     [X] implement scoreboard
     [X] questions should have a paginator as well
     [X] question's should be removed. Statistics should display stats and should be paginated
+    [ ] create a 'close now' and 'new question now' button for admin
 
 TODO v2
 ------------

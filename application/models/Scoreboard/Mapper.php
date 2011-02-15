@@ -56,16 +56,17 @@ class Model_Scoreboard_Mapper extends Model_Mapper {
 
         $select = $this->_table->select()->where('twitter_id LIKE ?', $twitter->getId());
         $row = $this->_table->fetchRow($select);
+        var_dump ($row);
 
         if ($row == null) {
             // Does not exists, insert new user
-            $data = array('twitter_id' => $twitter->getId(), 'score_points' => 1);
+            $data = array('twitter_id' => $twitter->getId(), 'score_points' => 1, 'score_time' => 0);
             $this->_table->insert($data);
         } else {
             $data = array(
                 'score_points' => ($row['score_points'] + 1),
-                'score_time' => ($row['score_time'] + 1));
-            $where = $this->_table->getAdapter()->quoteInto('twitter_id ?', $twitter->getId());
+                'score_time' => ($row['score_time'] + $time));
+            $where = $this->_table->getAdapter()->quoteInto('twitter_id = ?', $twitter->getId());
             $this->_table->update($data, $where);
         }
     }
