@@ -1,6 +1,9 @@
 <?php
 
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
+    /**
+     * @var \Zend_Config_Ini
+     */
     protected $_config;
 
     function __construct($application) {
@@ -10,7 +13,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         date_default_timezone_set("Europe/Amsterdam");
 
         // Load config into register
-        $this->_config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini', APPLICATION_ENV);
+        $this->_config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini', APPLICATION_ENV, true);
+
+        // Merge with user.ini settings if they exists
+        if (file_exists(APPLICATION_PATH . '/configs/user.ini')) {
+            $userConfig = new Zend_Config_Ini(APPLICATION_PATH . '/configs/user.ini', APPLICATION_ENV, true);
+            $this->_config = $this->_config->merge($userConfig);
+        }
+
+        // All done with the merging. Set to readonly
+        $this->_config->setReadOnly();
+
+        // Store in registry
         Zend_Registry::set('config', $this->_config);
     }
 
