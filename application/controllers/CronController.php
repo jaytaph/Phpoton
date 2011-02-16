@@ -225,8 +225,6 @@ class CronController extends Zend_Controller_Action
         foreach ($answers as $answer) {
             // Found correct answers.
 
-            // @TODO: Only one answer will be marked. What about others?
-
             print "Correct answer: ".$answer->getAnswer()."<br>\n";
 
             /**
@@ -251,6 +249,7 @@ class CronController extends Zend_Controller_Action
             $mainStatus->setSleepTime(time()+3600+rand(0, 600));
             Phpoton_Status::saveStatus($mainStatus);
 
+            // @TODO: Only one answer will be marked. What about others?
             break;
         }
     }

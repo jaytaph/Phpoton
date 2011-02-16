@@ -68,11 +68,10 @@ class Model_Scoreboard_Mapper extends Model_Mapper {
      * @return void
      */
     function increaseScore(Model_Tweep_Entity $twitter, $time = 0) {
-        // @TODO: Must lock this record
+        // @TODO: Must lock this record before we increase points since it's not atomic
 
         $select = $this->_table->select()->where('twitter_id LIKE ?', $twitter->getId());
         $row = $this->_table->fetchRow($select);
-        var_dump ($row);
 
         if ($row == null) {
             // Does not exists, insert new user

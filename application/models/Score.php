@@ -1,11 +1,9 @@
 <?php
 
-// @TODO: We could create an iterator for this. We just need to load all records into the iterator (fetchAll())?
 class Model_Score {
     protected $_rank;
     protected $_twitter_id;
     protected $_points;
-
 
     /**
      * @return Model_Tweep_Entity

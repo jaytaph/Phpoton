@@ -125,7 +125,7 @@ class IndexController extends Zend_Controller_Action
             }
             $stat->tweetedat = $question->getTweetDt();
 
-            // @todo: change this into a wonat
+            // @TODO: change this into a wonat
             $stat->wonat = $question->getTweetDt();
 
             $stats[] = $stat;

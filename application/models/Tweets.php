@@ -3,6 +3,7 @@
 // @TODO: Not happy with the current setup.. refactor..
 
 class Model_Tweets {
+    // @TODO: move path and caching times to application.ini
     const CACHEFILE = "/tmp/tweets.cache";
     const MAX_CACHE_TIME = 60;
 
