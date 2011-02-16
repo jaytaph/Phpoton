@@ -75,7 +75,7 @@ class CronController extends Zend_Controller_Action
 
                 // Tweet winner (in this case, nobody - timeout)
                 $this->_tweetWinner($question);
-                
+
                 // Set idle time for 5 minutes
                 $config->setSleepTime(time()+3600+rand(0, 600));
                 Phpoton_Status::saveStatus($config);
@@ -103,7 +103,7 @@ class CronController extends Zend_Controller_Action
         print ('FetchReplies<br>');
         // Get status object
         $mainStatus = Phpoton_Status::loadStatus();
-        
+
         /**
          * @var $twitter Zend_Service_Twitter
          */
@@ -141,7 +141,7 @@ class CronController extends Zend_Controller_Action
             }
         }
 
-        // Save the highest since_id back to the status
+        // Save the highest since_id back to the status->
         Phpoton_Status::saveStatus($mainStatus);
 
 
@@ -186,7 +186,8 @@ class CronController extends Zend_Controller_Action
         if ($question->getStatus() != "done") return;
 
         // Shorten URL
-        $url = Phpoton_Shortener::shorten("http://phpoton.com/index/question/id/".$question->getId());
+        $host = $this->getRequest()->getScheme() . '://' . $this->getRequest->getHttpHost();
+        $url = Phpoton_Shortener::shorten($host . "/index/question/id/".$question->getId());
 
         // Generate tweet text
         if ($question->getWinnerTweep() == null) {
@@ -223,9 +224,9 @@ class CronController extends Zend_Controller_Action
             // Found correct answers.
 
             // @TODO: Only one answer will be marked. What about others?
-            
+
             print "Correct answer: ".$answer->getAnswer()."<br>\n";
-            
+
             /**
              * @var $answer Model_Answer_Entity
              */

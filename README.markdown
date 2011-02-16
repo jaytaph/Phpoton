@@ -18,6 +18,7 @@ TODO
     [X] questions should have a paginator as well
     [X] question's should be removed. Statistics should display stats and should be paginated
     [ ] create a 'close now' and 'new question now' button for admin
+    [ ] fix the ranking, let people share a place when they have the same score
 
 TODO v2
 ------------
@@ -28,3 +29,4 @@ TODO v2
     [ ] make cron only callable from CLI only
     [ ] One answer per user (tweet message back to user if answered multiple times)
     [ ] Blocklist (from who?)
+    [ ] Create a API
