@@ -188,7 +188,8 @@ class CronController extends Zend_Controller_Action
         if ($question->getStatus() != "done") return;
 
         // Shorten URL
-        $host = $this->getRequest()->getScheme() . '://' . $this->getRequest->getHttpHost();
+        $config = Zend_Registry::get('config');
+        $host = $config->settings->hosturl;
         $url = Phpoton_Shortener::shorten($host . "/index/question/id/".$question->getId());
 
         // Generate tweet text
