@@ -41,22 +41,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     }
 
     /**
-     * Initializes twitter object
-     */
-    protected function _initTwitter() {
-        // Initialize and save twitter object
-        $accessToken = new Zend_Oauth_Token_Access();
-        $accessToken->setToken($this->_config->settings->twitter->accessToken)
-                    ->setTokenSecret($this->_config->settings->twitter->accessTokenSecret);
-
-        $data = array('username' => $this->_config->settings->twitter->screenName,
-                      'accessToken' => $accessToken);
-        $twitter = new Zend_Service_Twitter($data);
-
-        Zend_Registry::set('twitter', $twitter);
-    }
-
-    /**
      * Initializes default database
      */
     protected function _initDatabase() {
@@ -93,6 +77,32 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
                         'path'      => '../library/Phpoton'
                 )
         ));
+    }
+
+
+    /**
+     * Initializes twitter object
+     *
+     * Note: this function MUST be after _initLoaderResource. This is because
+     * that function will define the mapper space for phpoton_* classes and
+     * _init* functions are loaded top down by Zend...
+     */
+    protected function _initTwitter() {
+        if ($this->_config->settings->twitter->mock == 1) {
+            // Mock twitter environment if needed
+            $twitter = new Phpoton_Twitter();
+        } else {
+            // Initialize and save twitter object
+            $accessToken = new Zend_Oauth_Token_Access();
+            $accessToken->setToken($this->_config->settings->twitter->accessToken)
+                        ->setTokenSecret($this->_config->settings->twitter->accessTokenSecret);
+
+            $data = array('username' => $this->_config->settings->twitter->screenName,
+                          'accessToken' => $accessToken);
+            $twitter = new Zend_Service_Twitter($data);
+        }
+
+        Zend_Registry::set('twitter', $twitter);
     }
 
     protected function _initNavigation()
