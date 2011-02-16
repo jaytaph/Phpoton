@@ -95,7 +95,7 @@ class CronController extends Zend_Controller_Action
 
         // Send message to twitter
         $twitter = Zend_Registry::get('twitter');
-        $twitter->status->update($tweetText);
+        $twitter->statusUpdate($tweetText);
     }
 
 
@@ -201,7 +201,7 @@ class CronController extends Zend_Controller_Action
 
         // Send message to twitter
         $twitter = Zend_Registry::get('twitter');
-        $result = $twitter->status->update($tweetText);
+        $result = $twitter->statusUpdate($tweetText);
     }
 
 
