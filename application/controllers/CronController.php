@@ -53,6 +53,10 @@ class CronController extends Zend_Controller_Action
                 print('Passed sleep time: '.$config->getSleepTime().' < '.time().'<br>\n');
                 // Activate and tweet next pending question
                 $question = $mapper->getNextPendingQuestion();
+                if (! $question instanceof Model_Question_Entity) {
+                    // No pending question found
+                    return;
+                }
                 $question->markAsActive();
                 $this->_tweetQuestion($question);
             } else {
