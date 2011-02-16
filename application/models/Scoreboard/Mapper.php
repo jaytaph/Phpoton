@@ -29,16 +29,32 @@ class Model_Scoreboard_Mapper extends Model_Mapper {
     /**
      * Return array of Model_Score with top X users
      *
-     * @todo Model_Score should be iterator instead of returning an array
-     *
-     * @param int $count
-     * @return array Array of Model_Score
+     * @param int $count number of items we want to return
+     * @return Photon_Iterator_Score
      */
     function getTopScore($count = 20) {
-        $select = $this->_table->select()
-                ->order('score_points DESC')
-                ->limit($count);
+        // Initialize values
+        $this->_table->getAdapter()->query("SET @rownum = 0, @rank = 0, @prev_val = NULL");
 
+        /*
+         * We must use this (complex) query to calculate the ranking properly. We do this from
+         * the database so the iterator can easily seek. This is needed since we want to apply
+         * limititerators to our iterator so we can split score (like in 2 different columns for
+         * example) It would be difficult to do this inside the iterator itself.
+         *
+         * Query is taken from MySQL cookbook 
+         */
+        $select = $this->_table->select()
+            ->from($this->_tableName,
+                array(
+                    '*',
+                    'row' => new Zend_Db_Expr('@rownum := @rownum + 1'),
+                    'rank' => new Zend_Db_Expr('@rank := IF(@prev_val!=score_points,@rownum,@rank)'),
+                    'score_points' => new Zend_Db_Expr('@prev_val := score_points'),
+                    )
+                )
+            ->order('score_points DESC')
+            ->limit($count);
         return new Phpoton_Iterator_Score($this, $this->_table->fetchAll($select));
     }
 

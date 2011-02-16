@@ -18,7 +18,7 @@ TODO
     [X] questions should have a paginator as well
     [X] question's should be removed. Statistics should display stats and should be paginated
     [ ] create a 'close now' and 'new question now' button for admin
-    [ ] fix the ranking, let people share a place when they have the same score
+    [X] fix the ranking, let people share a place when they have the same score
 
 TODO v2
 ------------
