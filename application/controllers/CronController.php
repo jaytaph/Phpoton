@@ -10,11 +10,9 @@ class CronController extends Zend_Controller_Action
     {
         $config = Zend_Registry::get('config');
 
-        // @TODO: Make sure cron script can run from CLI
-//         Make sure we're being called as a CLI script
-//        if ($config->settings->cron->cli_only == 1 && php_sapi_name() != 'cli') {
-//            throw new Exception('Cannot be called from the web');
-//        }
+        if ($config->settings->cron->cli_only == 1 && php_sapi_name() != 'cli') {
+            throw new Exception('Cannot be called from the web');
+        }
 
         // Disable renderer and layout
         $this->_helper->viewRenderer->setNoRender(true);
