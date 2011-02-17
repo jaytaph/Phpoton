@@ -41,6 +41,7 @@ class Model_Question_Mapper extends Model_Mapper {
         $select = $this->_table->select()
                 ->where('status = ?', 'active')
                 ->limit(1);
+
         $row = $this->_table->fetchRow($select);
         if ($row == null) {
             return null;

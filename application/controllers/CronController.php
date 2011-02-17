@@ -14,6 +14,9 @@ class CronController extends Zend_Controller_Action
             throw new Exception('Cannot be called from the web');
         }
 
+        // Add [twitter:] parser
+        $this->view->addFilter('TwitterLink');
+
         // Disable renderer and layout
         $this->_helper->viewRenderer->setNoRender(true);
     }
