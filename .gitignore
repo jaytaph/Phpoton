@@ -2,3 +2,7 @@
 library/Zend
 public/images/captcha
 application/configs/user.ini
+.htpasswd
+logs
+public_html
+awstats
