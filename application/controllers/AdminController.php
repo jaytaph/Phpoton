@@ -147,6 +147,24 @@ class AdminController extends Zend_Controller_Action
 
 
     protected function _handlePost($data) {
+        if (! isset ($data['q'])) {
+            if ($_POST['tweetnow']) {
+                $mapper = new Model_Question_Mapper();
+                $question = $mapper->getActiveQuestion();
+                if ($question != null) {
+                    // Already a question active. No tweet
+                    return;
+                }
+
+                // Set sleeptime to now
+                $mainStatus = Phpoton_Status::loadStatus();
+                $mainStatus->setSleepTime(time());
+                Phpoton_Status::saveStatus($mainStatus);
+            }
+        }
+
+
+
         /**
          * @var $question Model_Question_Entity
          */

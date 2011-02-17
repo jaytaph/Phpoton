@@ -17,8 +17,10 @@ TODO
     [X] implement scoreboard
     [X] questions should have a paginator as well
     [X] question's should be removed. Statistics should display stats and should be paginated
-    [ ] create a 'close now' and 'new question now' button for admin
+    [ ] create a 'close now' button for admin
+    [X] create a 'new question now' button for admin
     [X] fix the ranking, let people share a place when they have the same score
+    [ ] it would be nicer if we just could use DM's so we don't clutter up tweetspace?
 
 TODO v2
 ------------
