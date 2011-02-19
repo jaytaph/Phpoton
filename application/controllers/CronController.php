@@ -27,7 +27,8 @@ class CronController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $this->_retrieveReplies();
+        $this->_retrievePublicReplies();
+        $this->_retrieveDirectMessageReplies();
         $this->_parseAnswers();
         $this->_handleQuestion();
     }
@@ -47,17 +48,19 @@ class CronController extends Zend_Controller_Action
         // No active question found?
         if (! $question instanceof Model_Question_Entity) {
             print('No active question found<br>');
-            print "QT: ".$config->getSleepTime()."<br>";
-            print "CT: ".time()."<br>";
+            print "QuestionTime: ".$config->getSleepTime()."<br>";
+            print "CurrentTime: ".time()."<br>";
             // See if it's time to ask a new question
             if ($config->getSleepTime() < time()) {
-                print('Passed sleep time: '.$config->getSleepTime().' < '.time().'<br>\n');
+                print('Passed sleep time: '.$config->getSleepTime().' < '.time().'<br>');
                 // Activate and tweet next pending question
                 $question = $mapper->getNextPendingQuestion();
                 if (! $question instanceof Model_Question_Entity) {
+                    print "No new pending question found<br>";
                     // No pending question found
                     return;
                 }
+                print "Question found: ".$question->getQuestion()."<br>";
                 $question->markAsActive();
                 $this->_tweetQuestion($question);
             } else {
@@ -70,8 +73,8 @@ class CronController extends Zend_Controller_Action
             /* Check if the question has timed out (we already parsed
              * incoming answers in a previous check, so we can safely
              * timeout the question at this point */
-            print "QT: ".$question->getTimeLimit()."<br>";
-            print "CT: ".time()."<br>";
+            print "QuestionTime: ".$question->getTimeLimit()."<br>";
+            print "CurrentTime: ".time()."<br>";
             if ($question->getTimeLimit() <= time()) {
                 print('Question is done<br>');
                 // Question timed out
@@ -90,7 +93,8 @@ class CronController extends Zend_Controller_Action
         }
     }
 
-    protected function _tweetQuestion(Model_Question_Entity $question) {
+    protected function _tweetQuestion(Model_Question_Entity $question)
+    {
         // Generate twitter message
         $tweetText = "Q".$question->getId().": ".$question->getQuestion();
 
@@ -103,18 +107,18 @@ class CronController extends Zend_Controller_Action
     /**
      * Retrieves replies from twitter
      */
-    protected function _retrieveReplies()
+    protected function _retrievePublicReplies()
     {
         print ('FetchReplies<br>');
-        // Get status object
+
         $mainStatus = Phpoton_Status::loadStatus();
+        $twitter = Zend_Registry::get('twitter');
 
         /**
          * @var $twitter Zend_Service_Twitter
          */
         // Get latest 100 tweets since specified time
         $options = array('since_id' => $mainStatus->getSinceId(), 'count' => 100);
-        $twitter = Zend_Registry::get('twitter');
         $response = $twitter->statusReplies($options);
 
         // Return when no status tweets are found...
@@ -123,32 +127,65 @@ class CronController extends Zend_Controller_Action
         $mapper = new Model_Question_Mapper();
         $question = $mapper->getActiveQuestion();
 
-        // Iterate over all found statuses
-        foreach ($response->status as $status) {
-            // Always save the highest status ID so we don't have to fetch these the next time
-            if ($status->id > $mainStatus->getSinceId()) $mainStatus->setSinceId($status->id);
+        // Don't parse question when no question is found
+        if (! $question instanceof Model_Question_Entity) return;
+        
+        // We cannot get directly the array from zend_rest_result. Which is another reason
+        // zend_rest must die a horrible death. We move everything back to an array,
+        // reverse it since twitter returns our messages in newest-first order..
+        $messages = array();
+        foreach ($response->status as $message) {
+            $messages[] = $message;
+        }
+        $messages = array_reverse($messages);
 
-            print ('New reply found : '.$status->user->screen_name.' says: '.$status->text.'<br>');
+
+        print "OLD SINCE ID: ".$mainStatus->getSinceId()."<br>";
+
+        // Iterate over all found statuses
+        foreach ($messages as $status) {
+            // Always save the highest status ID so we don't have to fetch these the next time
+
+            /* Since these ID's are 64bit numbers, we cannot do standard integer
+             * compare on 32 bit systems. We need to compare stringwise */
+            if (strcmp($status->id,$mainStatus->getSinceId()) >= 1) {
+                $mainStatus->setSinceId($status->id);
+            }
+
+            print ('New reply found : '.$status->id.' '.$status->user->screen_name.' says: '.$status->text.'<br>');
 
             // Add twitter user to our friends-list
-            $tmp = $twitter->friendshipCreate($status->user->id);
+            $twitter->friendshipCreate($status->user->id);
 
-            // Don't save answers when there is no current question
-            if ($question instanceof Model_Question_Entity) {
-                $answer = new Model_Answer_Entity();
-                $answer->setAnswer(Phpoton_Clean::cleanup($status->text));
-                $answer->setTwitterId($status->user->id);
-                $answer->setStatusId($status->id);
-                $answer->setQuestionId($question->getId());
-                $answer->setReceiveDt(date ("Y-m-d H:i:s", strtotime($status->created_at)));
-                $answerMapper = new Model_Answer_Mapper();
-                $answerMapper->save($answer);
-            }
+            // Skip if user already answered the question
+            $mapper = new Model_Answer_Mapper();
+            if ($mapper->hasAlreadyAnswered($status->user->id, $question)) continue;
+
+            // Save question
+            $answer = new Model_Answer_Entity();
+            $answer->setAnswer(Phpoton_Clean::cleanup($status->text));
+            $answer->setTwitterId($status->user->id);
+            $answer->setStatusId($status->id);
+            $answer->setQuestionId($question->getId());
+            $answer->setReceiveDt(date ("Y-m-d H:i:s", strtotime($status->created_at)));
+            $answerMapper = new Model_Answer_Mapper();
+            $answerMapper->save($answer);
         }
 
-        // Save the highest since_id back to the status->
+        // Save the highest since_id back to the status
+        print "NEW SINCE ID: ".$mainStatus->getSinceId()."<br>";
         Phpoton_Status::saveStatus($mainStatus);
+    }
 
+    /**
+     * Retrieves replies from twitter
+     */
+    protected function _retrieveDirectMessageReplies()
+    {
+        print ('FetchReplies<br>');
+
+        $mainStatus = Phpoton_Status::loadStatus();
+        $twitter = Zend_Registry::get('twitter');
 
         // Get latest 100 direct tweets since specified time
         $options = array('since_id' => $mainStatus->getSinceDmId(), 'count' => 100);
@@ -157,27 +194,53 @@ class CronController extends Zend_Controller_Action
         // Return when no status tweets are found...
         if (! isset($response->direct_message)) return;
 
-        // Iterate over all found statuses
-        foreach ($response->direct_message as $status) {
+        $mapper = new Model_Question_Mapper();
+        $question = $mapper->getActiveQuestion();
+
+        // Don't parse question when no question is found
+        if (! $question instanceof Model_Question_Entity) return;
+
+        // We cannot get directly the array from zend_rest_result. Which is another reason
+        // zend_rest must die a horrible death. We move everything back to an array,
+        // reverse it since twitter returns our messages in newest-first order..
+        $directMessages = array();
+        foreach ($response->direct_message as $message) {
+            $directMessages[] = $message;
+        }
+        $directMessages = array_reverse($directMessages);
+
+
+//        print "OLD SINCE ID: ".$mainStatus->getSinceDmId()."<br>";
+
+        // Iterate over all found messages
+        foreach ($directMessages as $status) {
             // Always save the highest status ID so we don't have to fetch these the next time
-            if ($status->id > $mainStatus->getSinceDmId()) $mainStatus->setSinceDmId($status->id);
-
-            print ('New DM reply found : '.$status->user->screen_name.' says: '.$status->text.'<br>');
-
-            // Don't save answers when there is no current question
-            if ($question instanceof Model_Question_Entity) {
-                $answer = new Model_Answer_Entity();
-                $answer->setAnswer(Phpoton_Clean::cleanup($status->text));
-                $answer->setTwitterId($status->sender->id);
-                $answer->setStatusId($status->id);
-                $answer->setQuestionId($question->getId());
-                $answer->setReceiveDt(date ("Y-m-d H:i:s", strtotime($status->created_at)));
-                $answerMapper = new Model_Answer_Mapper();
-                $answerMapper->save($answer);
+            /* Since these ID's are 64bit numbers, we cannot do standard integer
+             * compare on 32 bit systems. We need to compare stringwise */
+            if (strcmp($status->id,$mainStatus->getSinceId()) >= 1) {
+                $mainStatus->setSinceDmId($status->id);
             }
+            print ('New DM reply found : '.$status->id.' '.$status->user->screen_name.' says: '.$status->text.'<br>');
+
+            // Skip if user already answered the question
+            $mapper = new Model_Answer_Mapper();
+            if ($mapper->hasAlreadyAnswered($status->sender->id, $question)) continue;
+
+            print "Not yet answered. Saving<br>";
+
+            // Save answer
+            $answer = new Model_Answer_Entity();
+            $answer->setAnswer(Phpoton_Clean::cleanup($status->text));
+            $answer->setTwitterId($status->sender->id);
+            $answer->setStatusId($status->id);
+            $answer->setQuestionId($question->getId());
+            $answer->setReceiveDt(date ("Y-m-d H:i:s", strtotime($status->created_at)));
+            $answerMapper = new Model_Answer_Mapper();
+            $answerMapper->save($answer);
         }
 
         // Save the highest since_id back to the status
+//        print "NEW SINCE ID: ".$mainStatus->getSinceDmId()."<br>";
         Phpoton_Status::saveStatus($mainStatus);
     }
 

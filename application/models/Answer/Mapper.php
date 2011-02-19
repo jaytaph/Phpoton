@@ -58,4 +58,15 @@ class Model_Answer_Mapper extends Model_Mapper {
         return $this->fetchQuestionCount($question, true);
     }
 
+
+    public function hasAlreadyAnswered($userId, Model_Question_Entity $question) {
+        $select = $this->_table->select()
+            ->from($this->_tableName, 'COUNT(*)')
+            ->where('question_id = ?', $question->getId())
+            ->where('twitter_id = ?', $userId);
+
+        $count = $this->_table->getAdapter()->fetchOne($select);
+        return ($count >= 1);
+    }
+
 }

@@ -43,9 +43,7 @@ class Model_Question_Mapper extends Model_Mapper {
                 ->limit(1);
 
         $row = $this->_table->fetchRow($select);
-        if ($row == null) {
-            return null;
-        }
+        if ($row == null) return null;
 
         return $this->_fromArray($row->toArray());
     }
@@ -56,9 +54,7 @@ class Model_Question_Mapper extends Model_Mapper {
                 ->where('status = ?', 'pending')
                 ->limit(1);
         $row = $this->_table->fetchRow($select);
-        if ($row == null) {
-            return null;
-        }
+        if ($row == null) return null;
 
         return $this->_fromArray($row->toArray());
     }
