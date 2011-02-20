@@ -100,7 +100,6 @@ class CronController extends Zend_Controller_Action
 
         print('Question is done<br>');
 
-        // @TODO: Remove me
         $question->setStatus("done");
         $mapper->save($question);
 
@@ -292,7 +291,8 @@ class CronController extends Zend_Controller_Action
         if ($question->getWinnerTweep() == null) {
             $tweetText = "Nobody answered Q".$question->getId()." correctly. #phpoton ".$url;
         } else {
-            $tweetText = "Points for Q".$question->getId()." go to @".$question->getWinnerTweep()->getScreenName()." #phpoton ".$url;
+            $correctAnswers = $question->getCorrectReplyCount() - 1;
+            $tweetText = "Points for Q".$question->getId()." go to @".$question->getWinnerTweep()->getScreenName()." and ".$correctAnswers." other".($correctAnswers==1?"":"s").". #phpoton ".$url;
         }
 
         // Send message to twitter
@@ -307,6 +307,7 @@ class CronController extends Zend_Controller_Action
     protected function _parseAnswers()
     {
         print "parse answers<br>\n";
+        $config = Zend_Registry::get('config');
 
         // Don't parse when no question is active
         $question_mapper = new Model_Question_Mapper();
@@ -320,29 +321,28 @@ class CronController extends Zend_Controller_Action
         // No correct answers were found. Do nothing
         if (count($answers) == 0) return;
 
-        /**
-         * @var $question Model_Question_Entity
-         */
-        /**
-         * @var $answer Model_Answer_Entity
-         */
+        $points = explode(",", $config->settings->questions->points);
 
-        // @TODO: for now, only the first answer will get points
         // Iterate over all answers
         foreach ($answers as $position => $answer) {
-            print "Correct answer: $position : ".$answer->getTwitterId()." ".$answer->getAnswer()."<br>\n";
+            /**
+             * @var $answer Model_Answer_Entity
+             */
 
-            // Set winner
+            // First entry is the overall winner
             if ($position == 0) {
                 $question->setWinningAnswerId($answer->getId());
                 $question_mapper->save($question);
             }
 
+            // Get score
+            $score = isset($points[$position]) ? $points[$position] : 1;
+
             // Increase winner score
             $scoreboard = new Model_Scoreboard_Mapper();
-            $scoreboard->increaseScore($answer->getTweep());
+            $scoreboard->increaseScore($answer->getTweep(), $score);
 
-            break;
+            print "Correct answer: $position : ".$answer->getTwitterId()." ".$answer->getAnswer()." ".$score."<br>\n";
         }
     }
 

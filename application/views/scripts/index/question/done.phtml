@@ -8,6 +8,10 @@
   <tr><td>Status:</td><td><b><?php echo $this->escape($this->question->getStatus()); ?></b></td></tr>
   <tr><td>Replies:</td><td><b><?php echo $this->escape($this->question->getReplyCount()); ?></b></td></tr>
   <tr><td>Correct replies:</td><td><b><?php echo $this->escape($this->question->getReplyCount()); ?></b></td></tr>
-  <tr><td>Winner:</td><td><b><?php echo ($this->question->getWinnerTweep()) ? $this->escape("[twitter:".$this->question->getWinnerTweep()->getScreenName()."]") : "timed out"; ?></b></td></tr>
+  <tr><td>Winners:</td><td><b><?php
+      foreach ($this->question->getWinners() as $winner) {
+        echo $this->escape("[twitter:".$winner->getScreenName()."] ");
+      }?></b>
+  </td></tr>
   <tr><td colspan=2>&nbsp;</td></tr>
 </table>

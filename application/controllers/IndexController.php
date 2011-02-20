@@ -75,7 +75,6 @@ class IndexController extends Zend_Controller_Action
         
         $this->view->question = $question;
 
-
         switch ($question->getStatus()) {
             case "moderation" :
                 $this->render("question/moderation");
@@ -108,12 +107,17 @@ class IndexController extends Zend_Controller_Action
             $stat = new StdClass();
             $stat->id = $question->getId();
             $stat->replies = $question->getReplyCount();
-            if ($question->isActive()) {
-                $stat->winner = "";
-            } else if ($question->isTimedOut()) {
+            $stat->correctReplies = $question->getCorrectReplyCount();
+            if ($question->isActive()) continue;
+
+            if ($question->isTimedOut()) {
                 $stat->winner = "timed out";
             } else if ($question->isAnswered()) {
-                $stat->winner = "[twitter:".$question->getWinnerTweep()->getScreenName()."]";
+                if ($question->getWinnerTweep() == null) {
+                    $stat->winner = "Unknown";
+                } else {
+                    $stat->winner = "[twitter:".$question->getWinnerTweep()->getScreenName()."]";
+                }
             } else {
                 $stat->winner = "";
             }

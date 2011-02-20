@@ -17,7 +17,6 @@ TODO
     [X] implement scoreboard
     [X] questions should have a paginator as well
     [X] question's should be removed. Statistics should display stats and should be paginated
-    [ ] create a 'close now' button for admin
     [X] create a 'new question now' button for admin
     [X] fix the ranking, let people share a place when they have the same score
     [ ] it would be nicer if we just could use DM's so we don't clutter up tweetspace?
@@ -25,11 +24,12 @@ TODO
 
 TODO v2
 ------------
-    [ ] More points (10, 7, 5, 3, 1)
+    [X] More points (10, 7, 5, 3, 1)
     [ ] Create "groups" with scoring (first answer gets a point in the group)
-    [ ] Each question runs fixed amount of time
+    [X] Each question runs fixed amount of time
     [ ] Adding users to groups by group leader
     [ ] make cron only callable from CLI only
-    [ ] One answer per user (tweet message back to user if answered multiple times)
+    [X] One answer per user
+    [ ] Tweet message back to user if answered multiple times
     [ ] Blocklist (from who?)
-    [ ] Create a API
+    [ ] Create an API

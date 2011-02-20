@@ -6,6 +6,8 @@
   <tr style="background-color: #D0D0D0">
     <th>Q #</th>
     <th>Replies</th>
+    <th>Correct</th>
+    <th>Ratio</th>
     <th>Question</th>
     <th>Answer</th>
     <th>Tweeted at</th>
@@ -16,6 +18,13 @@
   <tr style="background-color: <?php echo $this->cycle(array("#F0F0F0", "#FFFFFF"))->next()?>">
     <td><?php echo $this->escape($stat->id); ?></td>
     <td><?php echo $this->escape($stat->replies); ?></td>
+    <td><?php echo $this->escape($stat->correctReplies); ?></td>
+    <td><?php
+      if ($stat->replies == 0) {
+          echo "";
+      } else {
+        printf("%.2f", ($stat->correctReplies / $stat->replies));
+      } ?></td>
     <td><?php echo $this->escape($stat->question); ?></td>
     <td><?php echo $this->escape($stat->answer); ?></td>
     <td><?php echo $this->escape($stat->tweetedat); ?></td>
@@ -23,6 +32,6 @@
     <td><a href="<?php echo $this->url(array('action' => 'question', 'id' => $stat->id)); ?>">View details</a></td>
   </tr>
 <?php endforeach; ?>
-    <tr style="background-color: #D0D0D0"><td colspan=7>&nbsp;</td>
+    <tr style="background-color: #D0D0D0"><td colspan=9>&nbsp;</td>
     </tr>
 </table>

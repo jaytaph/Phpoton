@@ -54,6 +54,7 @@ class Model_Question_Entity extends Model_Entity {
         $state = $this->getStatus();
         return ($state == "done" && $this->getWinningAnswerId() == null);
     }
+
     /**
      * Question is answered correctly
      */
@@ -80,6 +81,27 @@ class Model_Question_Entity extends Model_Entity {
         $mapper = new Model_Answer_Mapper();
         $count = $mapper->fetchCorrectAnswerCount($this);
         return $count;
+    }
+
+    /**
+     * Return the winners
+     * 
+     * @return ArrayIterator
+     */
+    public function getWinners() {
+        $winners = array();
+
+        $mapper = new Model_Answer_Mapper();
+        $answers = $mapper->fetchCorrectAnswers($this);
+        foreach ($answers as $answer) {
+            /**
+             * @var $answer Model_Answer_Entity
+             */
+            $twitter_id = $answer->getTwitterId();
+            $winners[] = Phpoton_Tweep::getTweep($twitter_id);
+        }
+
+        return new ArrayIterator($winners);
     }
 
     /**
