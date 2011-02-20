@@ -160,7 +160,9 @@ class AdminController extends Zend_Controller_Action
                 $mainStatus = Phpoton_Status::loadStatus();
                 $mainStatus->setSleepTime(time());
                 Phpoton_Status::saveStatus($mainStatus);
+                return;
             }
+            return;
         }
 
 
