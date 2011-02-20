@@ -10,6 +10,7 @@ class CronController extends Zend_Controller_Action
     {
         $config = Zend_Registry::get('config');
 
+        // Check if we can be called through the web
         if ($config->settings->cron->cli_only == 1 && php_sapi_name() != 'cli') {
             throw new Exception('Cannot be called from the web');
         }
@@ -27,9 +28,11 @@ class CronController extends Zend_Controller_Action
      */
     public function indexAction()
     {
+        // Retrieve replies
         $this->_retrievePublicReplies();
         $this->_retrieveDirectMessageReplies();
-        $this->_parseAnswers();
+
+        // Handle the question
         $this->_handleQuestion();
     }
 
@@ -40,59 +43,92 @@ class CronController extends Zend_Controller_Action
     protected function _handleQuestion()
     {
         print ('HandleQuestion<br>');
-        $config = Phpoton_Status::loadStatus();
 
+        // Fetch active question
         $mapper = new Model_Question_Mapper();
         $question = $mapper->getActiveQuestion();
 
-        // No active question found?
+        // No question was found
         if (! $question instanceof Model_Question_Entity) {
             print('No active question found<br>');
-            print "QuestionTime: ".$config->getSleepTime()."<br>";
-            print "CurrentTime: ".time()."<br>";
-            // See if it's time to ask a new question
-            if ($config->getSleepTime() < time()) {
-                print('Passed sleep time: '.$config->getSleepTime().' < '.time().'<br>');
-                // Activate and tweet next pending question
-                $question = $mapper->getNextPendingQuestion();
-                if (! $question instanceof Model_Question_Entity) {
-                    print "No new pending question found<br>";
-                    // No pending question found
-                    return;
-                }
-                print "Question found: ".$question->getQuestion()."<br>";
-                $question->markAsActive();
-                $this->_tweetQuestion($question);
-            } else {
-                print('Not yet passed<br>');
-            }
+            $this->_handleNewQuestion();
         } else {
-            print('Active question detected<br>');
-            // Question is active
-
-            /* Check if the question has timed out (we already parsed
-             * incoming answers in a previous check, so we can safely
-             * timeout the question at this point */
-            print "QuestionTime: ".$question->getTimeLimit()."<br>";
-            print "CurrentTime: ".time()."<br>";
-            if ($question->getTimeLimit() <= time()) {
-                print('Question is done<br>');
-                // Question timed out
-                $question->setStatus("done");
-                $mapper->save($question);
-
-                // Tweet winner (in this case, nobody - timeout)
-                $this->_tweetWinner($question);
-
-                // Set idle time for 5 minutes
-                $config->setSleepTime(time()+3600+rand(0, 600));
-                Phpoton_Status::saveStatus($config);
-            } else {
-                print('Question is not yet done<br>');
-            }
+            // Handle active question
+            print('Active question found<br>');
+            $this->_handleCurrentQuestion();
         }
     }
 
+    // Called when a new question can be tweeted.
+    function _handleNewQuestion() {
+        $mainStatus = Phpoton_Status::loadStatus();
+
+        // Check if the sleep time has passed. If not, return
+        print "Question Time: ".$mainStatus->getSleepTime()."<br>";
+        print "Current  Time: ".time()."<br>";
+        if ($mainStatus->getSleepTime() > time()) return;
+
+        // Time to tweet new question
+
+        print('Passed sleep time: '.$mainStatus->getSleepTime().' < '.time().'<br>');
+        // Activate and tweet next pending question
+        $mapper = new Model_Question_Mapper();
+        $question = $mapper->getNextPendingQuestion();
+        if (! $question instanceof Model_Question_Entity) {
+            print "No new pending question found<br>";
+            // No pending question found
+            return;
+        }
+        print "Question found: ".$question->getQuestion()."<br>";
+        $question->markAsActive();
+        $this->_tweetQuestion($question);
+    }
+
+    // Called when a current question is active
+    function _handleCurrentQuestion() {
+        $mainStatus = Phpoton_Status::loadStatus();
+        $config = Zend_Registry::get('config');
+
+        // Fetch current active question
+        $mapper = new Model_Question_Mapper();
+        $question = $mapper->getActiveQuestion();
+
+        // Check if the question time has passed. If not, return
+        print "Question Time: ".$question->getTimeLimit()."<br>";
+        print "Current  Time: ".time()."<br>";
+        if ($question->getTimeLimit() > time()) return;
+
+        print('Question is done<br>');
+
+        // @TODO: Remove me
+        $question->setStatus("done");
+        $mapper->save($question);
+
+        // Do the scoring of the question
+        $this->_parseAnswers($question);
+
+        // Reload question. The winner tweep might have been changed
+        $question = $mapper->findByPk($question->getId());
+
+        // Tweet winner (or if nobody won, display timeout)
+        $this->_tweetQuestionResult($question);
+
+        // Set idle time before next question will be tweeted
+        $mainStatus->setSleepTime(
+            time()+rand(
+                $config->settings->questions->inactivity_min,
+                $config->settings->questions->inactivity_max)
+        );
+        Phpoton_Status::saveStatus($mainStatus);
+    }
+
+
+    /**
+     * Tweets question to the outside world
+     * 
+     * @param Model_Question_Entity $question
+     * @return void
+     */
     protected function _tweetQuestion(Model_Question_Entity $question)
     {
         // Generate twitter message
@@ -140,15 +176,13 @@ class CronController extends Zend_Controller_Action
         $messages = array_reverse($messages);
 
 
-        print "OLD SINCE ID: ".$mainStatus->getSinceId()."<br>";
-
         // Iterate over all found statuses
         foreach ($messages as $status) {
             // Always save the highest status ID so we don't have to fetch these the next time
 
             /* Since these ID's are 64bit numbers, we cannot do standard integer
              * compare on 32 bit systems. We need to compare stringwise */
-            if (strcmp($status->id,$mainStatus->getSinceId()) >= 1) {
+            if (strcmp($status->id, $mainStatus->getSinceId()) >= 1) {
                 $mainStatus->setSinceId($status->id);
             }
 
@@ -173,7 +207,6 @@ class CronController extends Zend_Controller_Action
         }
 
         // Save the highest since_id back to the status
-        print "NEW SINCE ID: ".$mainStatus->getSinceId()."<br>";
         Phpoton_Status::saveStatus($mainStatus);
     }
 
@@ -210,14 +243,12 @@ class CronController extends Zend_Controller_Action
         $directMessages = array_reverse($directMessages);
 
 
-//        print "OLD SINCE ID: ".$mainStatus->getSinceDmId()."<br>";
-
         // Iterate over all found messages
         foreach ($directMessages as $status) {
             // Always save the highest status ID so we don't have to fetch these the next time
             /* Since these ID's are 64bit numbers, we cannot do standard integer
              * compare on 32 bit systems. We need to compare stringwise */
-            if (strcmp($status->id,$mainStatus->getSinceId()) >= 1) {
+            if (strcmp($status->id, $mainStatus->getSinceDmId()) >= 1) {
                 $mainStatus->setSinceDmId($status->id);
             }
             print ('New DM reply found : '.$status->id.' '.$status->user->screen_name.' says: '.$status->text.'<br>');
@@ -226,7 +257,7 @@ class CronController extends Zend_Controller_Action
             $mapper = new Model_Answer_Mapper();
             if ($mapper->hasAlreadyAnswered($status->sender->id, $question)) continue;
 
-            print "Not yet answered. Saving<br>";
+            print "Tweep has not yet answered this question. Saving<br>";
 
             // Save answer
             $answer = new Model_Answer_Entity();
@@ -240,7 +271,6 @@ class CronController extends Zend_Controller_Action
         }
 
         // Save the highest since_id back to the status
-//        print "NEW SINCE ID: ".$mainStatus->getSinceDmId()."<br>";
         Phpoton_Status::saveStatus($mainStatus);
     }
 
@@ -248,7 +278,7 @@ class CronController extends Zend_Controller_Action
     /**
      * Tweet a winner
      */
-    protected function _tweetWinner(Model_Question_Entity $question)
+    protected function _tweetQuestionResult(Model_Question_Entity $question)
     {
         // Sanity check to see if the question is really done
         if ($question->getStatus() != "done") return;
@@ -283,40 +313,35 @@ class CronController extends Zend_Controller_Action
         $question = $question_mapper->getActiveQuestion();
         if (! $question instanceof Model_Question_Entity) return;
 
+        // Fetch answers in sequential order for current question
+        $answer_mapper = new Model_Answer_Mapper();
+        $answers = $answer_mapper->fetchCorrectAnswers($question);
+
+        // No correct answers were found. Do nothing
+        if (count($answers) == 0) return;
+
         /**
          * @var $question Model_Question_Entity
          */
-        // Fetch answers in sequential order for current question
-        $mapper = new Model_Answer_Mapper();
-        $answers = $mapper->fetchCorrectAnswers($question);
-        foreach ($answers as $answer) {
-            // Found correct answers.
+        /**
+         * @var $answer Model_Answer_Entity
+         */
 
-            print "Correct answer: ".$answer->getAnswer()."<br>\n";
-
-            /**
-             * @var $answer Model_Answer_Entity
-             */
+        // @TODO: for now, only the first answer will get points
+        // Iterate over all answers
+        foreach ($answers as $position => $answer) {
+            print "Correct answer: $position : ".$answer->getTwitterId()." ".$answer->getAnswer()."<br>\n";
 
             // Set winner
-            $question->setStatus('done');
-            $question->setWinningAnswerId($answer->getId());
-            $question_mapper->save($question);
+            if ($position == 0) {
+                $question->setWinningAnswerId($answer->getId());
+                $question_mapper->save($question);
+            }
 
             // Increase winner score
             $scoreboard = new Model_Scoreboard_Mapper();
             $scoreboard->increaseScore($answer->getTweep());
 
-            // Tweet winner
-            // @TODO: we tweet the winner immediately. Maybe it's nicer to wait a while?
-            $this->_tweetWinner($question);
-
-            // Set idle time for 5 minutes (+ rand 5 minutes)
-            $mainStatus = Phpoton_Status::loadStatus();
-            $mainStatus->setSleepTime(time()+3600+rand(0, 600));
-            Phpoton_Status::saveStatus($mainStatus);
-
-            // @TODO: Only one answer will be marked. What about others?
             break;
         }
     }
