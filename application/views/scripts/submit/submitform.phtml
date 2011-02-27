@@ -1,0 +1,43 @@
+<form action="<?php echo $this->escape($this->element->getAction()); ?>"
+      method="<?php echo $this->escape($this->element->getMethod()); ?>">
+
+<table>
+  <tr>
+    <td>Name</td>
+    <td><?php echo $this->element->fullname; ?></td>
+  </tr>
+
+  <tr><td colspan=2></tr>
+  <tr>
+    <td>Twitter name</td>
+    <td>You will receive 3 bonus points if this question gets tweeted by Phpoton<br><?php echo $this->element->twitter; ?></td>
+  </tr>
+
+
+  <tr><td colspan=2>&nbsp;</tr>
+  <tr>
+    <td>Question</td>
+    <td><?php echo $this->element->question; ?></td>
+  </tr>
+  <tr>
+    <td>Answer</td>
+    <td><?php echo $this->element->answer; ?></td>
+  </tr>
+
+  <tr><td colspan=2>&nbsp;</tr>
+  <tr><td colspan=2>I do not tolerate other bots. Proof you are human!</tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><?php echo $this->element->captcha; ?></td>
+  </tr>
+  <tr><td colspan=2>&nbsp;</tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><?php echo $this->element->submit; ?></td>
+  </tr>
+
+
+
+</table>
+
+</form>
