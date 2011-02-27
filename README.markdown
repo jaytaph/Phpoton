@@ -21,6 +21,9 @@ TODO
     [X] fix the ranking, let people share a place when they have the same score
     [ ] it would be nicer if we just could use DM's so we don't clutter up tweetspace?
     [X] First answer counts
+    [ ] Give points to submitter of questions
+    [ ] Remove decorators from captcha
+    [ ] Error messages should be placed better (decorator issue)
 
 TODO v2
 ------------

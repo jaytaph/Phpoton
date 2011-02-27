@@ -40,7 +40,14 @@ class IndexController extends Zend_Controller_Action
      */
     public function scoreAction() {
         $scoreboard = new Model_Scoreboard_Mapper();
-        $this->view->topscore = $scoreboard->getTopScore(20);
+
+        $iterator = $scoreboard->getTopScore();
+        $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Iterator($iterator));
+        $paginator->setDefaultScrollingStyle('Sliding');
+        $paginator->setItemCountPerPage(25);
+        $paginator->setCurrentPageNumber($this->_getParam('page'), 1);
+        
+        $this->view->score = $paginator;
     }
 
 

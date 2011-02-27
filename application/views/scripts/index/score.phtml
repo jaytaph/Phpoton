@@ -1,35 +1,17 @@
-<h2>Who is currently inside the top-20?</h2>
+<h2>Phpoton leader board</h2>
 
+<?php echo $this->paginationControl($this->score, 'Sliding', 'paginator.phtml'); ?>
+    
 <table width=100%>
-    <tr><td colspan=2 style='background-color: #ccc'>&nbsp;</td></tr>
-    <tr><td>
+<?php foreach ($this->score as $score) : ?>
+  <tr style="background-color: <?php echo $this->cycle(array("#F0F0F0", "#FFFFFF"))->next()?>">
+    <td>Rank #<?php echo $this->escape($score->rank);?></td>
+    <td>[twitter_id:<?php echo $this->escape($score->twitter_id); ?>]</td>
+    <td><?php echo $this->escape($score->score_points); ?> Points</td>
+  </tr>
+<?php endforeach; ?>
 
-        <table width=100%>
-        <?php
-          $iterator = new LimitIterator($this->topscore, 0, count($this->topscore) / 2);
-          foreach ($iterator as $score) : ?>
-          <tr style="background-color: <?php echo $this->cycle(array("#F0F0F0", "#FFFFFF"))->next()?>">
-            <td>Rank #<?php echo $this->escape($score->getRank());?></td>
-            <td>[twitter:<?php echo $this->escape($score->getTwitterInfo()->getScreenName()); ?>]</td>
-            <td><?php echo $this->escape($score->getPoints()); ?> Points</td>
-          </tr>
-        <?php endforeach; ?>
-        </table>
-
-    </td><td>
-
-        <table width=100%>
-        <?php
-            $iterator = new LimitIterator($this->topscore, count($this->topscore) / 2);
-            foreach ($iterator as $score) : ?>
-          <tr style="background-color: <?php echo $this->cycle(array("#F0F0F0", "#FFFFFF"))->next()?>">
-            <td>Rank #<?php echo $this->escape($score->getRank());?></td>
-            <td>[twitter:<?php echo $this->escape($score->getTwitterInfo()->getScreenName()); ?>]</td>
-            <td><?php echo $this->escape($score->getPoints()); ?> Points</td>
-          </tr>
-        <?php endforeach; ?>
-        </table>
-
-    </td></tr>
-    <tr><td colspan=2 style='background-color: #ccc'>&nbsp;</td></tr>
+  <tr><td colspan=3 style='background-color: #ccc'>&nbsp;</td></tr>
 </table>
+
+<?php echo $this->paginationControl($this->score, 'Sliding', 'paginator.phtml'); ?>
