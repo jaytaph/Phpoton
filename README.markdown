@@ -1,6 +1,6 @@
 PHPoton
 =======
-A (simple) tweetbot.
+A (simple) tweetbot implemented in ZendFramework 1. 
 
 
 TODO
